@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  web:
+    image: php:7.2-apache
+    build: .
+    container_name: cakephp_app
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - db
+    networks:
+      - cakephp-network
+
+  db:
+    image: mysql:5.6
+    container_name: cakephp_db
+    platform: linux/amd64
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: messageboard
+      MYSQL_USER: user
+      MYSQL_PASSWORD: user
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./docker/mysql:/docker-entrypoint-initdb.d:cached
+    networks:
+      - cakephp-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: root_password
+    ports:
+      - "8081:80"
+    depends_on:
+      - db
+    networks:
+      - cakephp-network
+
+networks:
+  cakephp-network:
+    driver: bridge

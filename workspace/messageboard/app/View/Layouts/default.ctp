@@ -14,22 +14,17 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-$cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework');
-$cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
+
 ?>
 <!DOCTYPE html>
 <html>
 <head>
 	<?php echo $this->Html->charset(); ?>
 	<title>
-		<?php echo $cakeDescription ?>:
-		<?php echo $this->fetch('title'); ?>
+		<?php echo $title_for_layout; ?>
 	</title>
 	<?php
-		echo $this->Html->meta('icon');
-
-		echo $this->Html->css('cake.generic');
-
+		echo $this->Html->css('style.css');
 		echo $this->fetch('meta');
 		echo $this->fetch('css');
 		echo $this->fetch('script');
@@ -41,28 +36,26 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 </head>
 <body>
+	<div id="header">
+		<h1>Message Board</h1>
+		<div id="navbar">
+			<?php if ($this->Session->read('Auth.User')): ?>
+				<span class="user-name">
+                	<?php echo ($this->Session->read('Auth.User.name')); ?>
+				</span>
+				<?php echo $this->Html->link('LOGOUT', array('controller' => 'users', 'action' => 'logout'), array('class' => 'nav-button')); ?>
+			<?php else: ?>
+				<?php echo $this->Html->link('LOGIN', array('controller' => 'users', 'action' => 'login'), array('class' => 'nav-button')); ?>
+				<?php echo $this->Html->link('REGISTER', array('controller' => 'users', 'action' => 'register'), array('class' => 'nav-button')); ?>
+			<?php endif; ?>
+    </div>
+	</div>
 	<div id="container">
-		<div id="header">
-			<h1><?php echo $this->Html->link($cakeDescription, 'https://cakephp.org'); ?></h1>
-		</div>
 		<div id="content">
-
-			<?php echo $this->Flash->render(); ?>
-
-			<?php echo $this->fetch('content'); ?>
-		</div>
-		<div id="footer">
-			<?php echo $this->Html->link(
-					$this->Html->image('cake.power.gif', array('alt' => $cakeDescription, 'border' => '0')),
-					'https://cakephp.org/',
-					array('target' => '_blank', 'escape' => false, 'id' => 'cake-powered')
-				);
-			?>
-			<p>
-				<?php echo $cakeVersion; ?>
-			</p>
+			<?php echo $this->Session->flash(); ?>
+			<?php echo $content_for_layout; ?> 
 		</div>
 	</div>
-	<?php echo $this->element('sql_dump'); ?>
+
 </body>
 </html>

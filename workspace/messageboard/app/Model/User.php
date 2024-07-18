@@ -36,22 +36,40 @@ class User extends Model {
     var $validate = array(
         'name' => array(
             'name_must_not_be_blank' => array(
-                'rule' => 'notEmpty',
-                'message' => 'Name cannot be empty'
+                'rule' => 'notBlank',
+                'message' => 'Please enter your name'
             ),
         ),
         'email' => array(
-                'name_must_not_be_blank' => array(
+            'valid_email' => array(
+                'rule' => array('email'),
+                'message' => 'Please enter a valid email address'
+            ),
+            'email_already_taken' =>array(
                 'rule' => 'isUnique',
                 'message' => 'Email Address already exists'
+            ),
+            'email_must_not_be_blank' => array(
+                'rule' => 'notBlank',
+                'message' => 'Please enter email address'
             ),
         ),
         'password' => array(
             'password_must_not_be_blank' => array(
-                'rule' => 'notEmpty',
+                'rule' => 'notBlank',
                 'message' => 'Password cannot be empty'
             ),
+            'match_password' => array(
+                'rule' => 'matchPasswords',
+                'message' => "Passwords do not match"
+            )
         ),
+        'password_confirmation' => array(
+            'password_must_not_be_blank' => array(
+                'rule' => 'notBlank',
+                'message' => 'Please confirm password'
+            ),
+        ),   
         'birthdate' => array(
 
         ),
@@ -65,5 +83,20 @@ class User extends Model {
 
         ),
     );
+
+    public function matchPasswords($data){
+        if ($data['password'] == $this->data['User']['password_confirmation']){
+            return true;
+        }
+        $this->invalidate('password_confirmation', 'Passwords do not match');
+        return false;
+    }
+
+    public function beforeSave($options = array()) {
+        if (isset($this->data[$this->alias]['password'])) {
+            $this->data[$this->alias]['password'] = AuthComponent::password($this->data[$this->alias]['password']);
+        }
+        return true;
+    }
 
 }

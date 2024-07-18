@@ -15,8 +15,9 @@
                     <?php echo $user['User']['email']; ?>
                 </td>
                 <td>
-                    <?php echo $this->Html->link('Edit', array('action'=>'edit', $user['User']['id'])); ?>
-                    <?php echo $this->Html->link('Delete', array('action'=>'delete', $user['User']['id'])); ?>
+                    <?php echo $this->Html->link('Update Personal Information', array('action'=>'edit', $user['User']['id'])); ?>
+                    <?php echo $this->Html->link('Change Email', array('action'=>'change_email', $user['User']['id'])); ?>
+                    <?php echo $this->Html->link('Change Password', array('action'=>'change_password', $user['User']['id'])); ?>
                 </td>
             </tr>    
     </table>

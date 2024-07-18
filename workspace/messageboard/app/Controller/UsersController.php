@@ -33,15 +33,49 @@ App::uses('Controller', 'Controller');
 class UsersController extends AppController {
 
     var $name= 'Users';
+    var $layout = 'default';
+    public $uses = array('User');
 
-    function index(){
-        $this->set('users', $this->User->find('all'));
+    public function beforeFilter(){
+        parent::beforeFilter(); //calling the parent function that is in AppController
+        $this->Auth->allow('thankyou');
     }
 
-    // function view($id = NULL){
-    //     $this->set('user', $this->User->read(NULL,$id));
+    public function index($id = null){
+        $this->set('user', $this->User->read(NULL,$id));
+    }
+
+    public function login(){     
+        if($this->request->is('post')){
         
-    // }
+            if($this->Auth->login()){
+                $user = $this->Auth->user();
+                $this->User->id = $user['id'];
+                $this->User->saveField('last_login_time', date('Y-m-d H:i:s'));
+                $this->redirect($this->Auth->redirect());
+            }else{
+                $this->Session->setFlash('Email or password is incorrect');
+            }
+        }
+    }
+
+    public function register(){
+        if ($this->request->is('post')) {
+       
+            $this->User->create();
+            if ($this->User->save($this->request->data)) {
+                $this->Session->setFlash('Registration complete');
+                $this->redirect(array('action' => 'thankyou'));
+            } else {
+                $this->Session->setFlash('Registration failed. Please try again.');
+            }
+        }
+    }
+
+    public function logout(){
+        $this->redirect($this->Auth->logout());
+    }
+
     public function view($id = null) {
         if (!$this->User->exists($id)) {
             throw new NotFoundException(__('Invalid user'));
@@ -49,17 +83,6 @@ class UsersController extends AppController {
         $user = $this->User->findById($id);
         $this->set('user', $user);
     }
-
-    // public function edit($id = null){
-    //     if(empty($this->data)){
-    //         $this->data = $this->User->read(NULL, $id);
-    //     }else{
-    //         if($this->User->save($this->data)){
-    //             $this->Session->setFlash('User has been Updated!');
-    //             $this->redirect(array('action'=>'view',$id));
-    //         }
-    //     }
-    // }
 
     public function edit($id = null){
         if (!$id) {
@@ -104,6 +127,7 @@ class UsersController extends AppController {
             $this->request->data = $user;
         }
         $this->set('user',$user);
+        
     }
 
     function delete($id = NULL){
@@ -111,5 +135,93 @@ class UsersController extends AppController {
         $this->Session->setFlash('User has been deleted');
         $this->redirect(array('action'=>'index'));
     }
+
+    function thankyou(){
+
+    }
+
+    public function change_email() {
+        if ($this->request->is('post') || $this->request->is('put')) {
+            $this->User->id = $this->Auth->user('id'); 
+
+            if ($this->User->save($this->request->data)) {
+                $this->Session->setFlash(__('Your email has been updated.'));
+                $this->redirect(array('action' => 'view', $this->User->id));
+            } else {
+                $this->Session->setFlash(__('Unable to update your email. Please try again.'));
+            }
+        }
+        $this->request->data = $this->User->findById($this->Auth->user('id'));
+    }
+
+    // public function change_password() {
+    //     if ($this->request->is('post') || $this->request->is('put')) {
+    //         $this->loadModel('User');
+    //         $user = $this->User->findById($this->Auth->user('id')); // Fetch user by ID
+            
+    //         if (!empty($user)) {
+    //             $hashedPassword = $user['User']['password'];
+                
+    //             if (Hash::check($this->request->data['User']['old_password'], $hashedPassword)) {
+    //                 $this->User->set($this->request->data);
+                    
+    //                 if ($this->User->validates()) {
+    //                     $newPassword = AuthComponent::password($this->request->data['User']['new_password']);
+                        
+    //                     $this->User->id = $user['User']['id'];
+                        
+    //                     if ($this->User->saveField('password', $newPassword)) {
+    //                         $this->Session->setFlash('Password Changed Successfully');
+    //                         $this->redirect(array('action' => 'index'));
+    //                     } else {
+    //                         $this->Session->setFlash('Failed to change password');
+    //                     }
+    //                 }
+    //             } else {
+    //                 $this->Session->setFlash('Old password is incorrect');
+    //             }
+    //         } else {
+    //             $this->Session->setFlash('User not found');
+    //         }
+    //     }
+    // }
+
+    public function change_password() {
+        if ($this->request->is('post') || $this->request->is('put')) {
+            $this->loadModel('User');
+            $user = $this->User->findById($this->Auth->user('id')); // Fetch user by ID
+            
+            if (!empty($user)) {
+                // Verify old password using AuthComponent
+                if ($this->Auth->password($this->request->data['User']['old_password']) === $user['User']['password']) {
+                    $this->User->set($this->request->data);
+                    debug($this->request->data);
+                    // Validate the new password and proceed if valid
+                    if ($this->User->validates()) {
+                        $newPassword = $this->Auth->password($this->request->data['User']['new_password']);
+                        debug($newPassword);
+                        $this->User->id = $user['User']['id'];
+                        
+                        // Save the new hashed password
+                        if ($this->User->saveField('password', $newPassword)) {
+                            debug($newPassword);
+                            $this->Session->setFlash('Password Changed Successfully');
+                            $this->redirect(array('action' => 'index'));
+                        } else {
+                            $this->Session->setFlash('Failed to change password');
+                        }
+                    } else {
+                        // Handle validation errors
+                        $this->Session->setFlash('Validation error: ' . implode(', ', $this->User->validationErrors));
+                    }
+                } else {
+                    $this->Session->setFlash('Old password is incorrect');
+                }
+            } else {
+                $this->Session->setFlash('User not found');
+            }
+        }
+    }
+    
     
 }

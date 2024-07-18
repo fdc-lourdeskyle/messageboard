@@ -1,25 +1,10 @@
-<html>
-
-    <h1>All Users</h1> 
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Action</th>
-        </tr>
-        <?php foreach($users as $user):?>
-            <tr>
-                <td>
-                    <?php echo $user['User']['name']; ?>
-                </td>
-                <td>
-                    <?php echo $user['User']['email']; ?>
-                </td>
-                <td>
-                    <?php echo $this->Html->link('Edit', array('action'=>'edit', $user['User']['id'])); ?>
-                    <?php echo $this->Html->link('Delete', array('action'=>'delete', $user['User']['id']), NULL, 'Are you sure you want to delete user?'); ?>
-                </td>
-            </tr>
-        <?php endforeach ?>       
-    </table>
-</html>
+<div id="con">
+    <div class="action-container">
+        <div class="action-button">
+            <a href=""><?php echo $this->Html->link('My Profile', array('action'=>'view', $currentUserId)); ?></a>
+        </div>
+        <div class="action-button">
+            <a href="" class=""><?php echo $this->Html->link('Messages', array('action'=>'edit', $currentUserId)); ?></a>
+        </div>
+    </div>
+</div>

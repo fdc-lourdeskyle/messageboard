@@ -154,64 +154,27 @@ class UsersController extends AppController {
         $this->request->data = $this->User->findById($this->Auth->user('id'));
     }
 
-    // public function change_password() {
-    //     if ($this->request->is('post') || $this->request->is('put')) {
-    //         $this->loadModel('User');
-    //         $user = $this->User->findById($this->Auth->user('id')); // Fetch user by ID
-            
-    //         if (!empty($user)) {
-    //             $hashedPassword = $user['User']['password'];
-                
-    //             if (Hash::check($this->request->data['User']['old_password'], $hashedPassword)) {
-    //                 $this->User->set($this->request->data);
-                    
-    //                 if ($this->User->validates()) {
-    //                     $newPassword = AuthComponent::password($this->request->data['User']['new_password']);
-                        
-    //                     $this->User->id = $user['User']['id'];
-                        
-    //                     if ($this->User->saveField('password', $newPassword)) {
-    //                         $this->Session->setFlash('Password Changed Successfully');
-    //                         $this->redirect(array('action' => 'index'));
-    //                     } else {
-    //                         $this->Session->setFlash('Failed to change password');
-    //                     }
-    //                 }
-    //             } else {
-    //                 $this->Session->setFlash('Old password is incorrect');
-    //             }
-    //         } else {
-    //             $this->Session->setFlash('User not found');
-    //         }
-    //     }
-    // }
-
     public function change_password() {
         if ($this->request->is('post') || $this->request->is('put')) {
             $this->loadModel('User');
-            $user = $this->User->findById($this->Auth->user('id')); // Fetch user by ID
+            $user = $this->User->findById($this->Auth->user('id'));
             
             if (!empty($user)) {
-                // Verify old password using AuthComponent
+ 
                 if ($this->Auth->password($this->request->data['User']['old_password']) === $user['User']['password']) {
                     $this->User->set($this->request->data);
-                    debug($this->request->data);
-                    // Validate the new password and proceed if valid
+
+
                     if ($this->User->validates()) {
-                        $newPassword = $this->Auth->password($this->request->data['User']['new_password']);
-                        debug($newPassword);
                         $this->User->id = $user['User']['id'];
                         
-                        // Save the new hashed password
-                        if ($this->User->saveField('password', $newPassword)) {
-                            debug($newPassword);
+                        if ($this->User->saveField('password', $this->request->data['User']['new_password'])) {
                             $this->Session->setFlash('Password Changed Successfully');
                             $this->redirect(array('action' => 'index'));
                         } else {
                             $this->Session->setFlash('Failed to change password');
                         }
                     } else {
-                        // Handle validation errors
                         $this->Session->setFlash('Validation error: ' . implode(', ', $this->User->validationErrors));
                     }
                 } else {
@@ -223,5 +186,29 @@ class UsersController extends AppController {
         }
     }
     
+    public function search(){
+        $this->autoRender = false;
+        $term = $this->request->query('q');
+
+        $users = $this->User->find('all', array(
+            'conditions' => array(
+                'OR' => array(
+                    'User.name LIKE' => '%' . $term . '%',
+                )
+            ),
+                'fields' => array('User.id','User.name'),
+                'limit' => 10
+        ));
+
+        $results = array();
+        foreach($users as $user){
+            $results[] = array(
+                'id' => $user['User']['id'],
+                'text' => $user['User']['name']
+            );
+        }
+        echo json_encode($results);
+    } 
+
     
 }

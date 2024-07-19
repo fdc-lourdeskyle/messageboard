@@ -29,11 +29,18 @@
 		echo $this->fetch('css');
 		echo $this->fetch('script');
 	?>
-	  <!-- jQuery library -->
-	  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<!-- jQuery library -->
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <!-- jQuery UI library -->
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+		<!-- Select2 CSS -->
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+		<!-- Select2 JS -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 </head>
 <body>
 	<div id="header">

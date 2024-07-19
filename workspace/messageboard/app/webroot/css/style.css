@@ -186,3 +186,73 @@ a:visited{
     color: white;
     background-color: #8d99ae;
 }
+
+.convo-container{
+    width: 500px;
+    height: 200px;
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.convo{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.convo-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.convo-list{
+    background-color: white;
+    border: 1px solid #000000;
+    padding: 10px;
+}
+
+.convo-content{
+    display: flex;
+    flex: row;
+    flex-direction: space-between;
+    margin-left: 0%;
+}
+
+.msg-header{
+    font-size: 20px;
+}
+
+.new-message-button{
+    background-color: #f8f9fa;
+    font-size: 16px;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.msg-action-btns{
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.msg-img{
+ margin-left: 10px;
+ margin-right: 5px;
+}
+
+.msg-content{
+    position: relative;
+    padding: 10px 14px 10px 10px;
+    width: 600px;
+}
+
+.timestamp{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}

@@ -26,7 +26,18 @@
  * to use (in this case, /app/View/Pages/home.ctp)...
  */
 	Router::connect('/', array('controller' => 'pages', 'action' => 'display', 'home'));
-	
+	Router::connect('/conversations/loadMore/:conversationId', array(
+		'controller' => 'conversations',
+		'action' => 'loadMore'
+	), array(
+		'pass' => array('conversationId'),
+		'conversationId' => '[0-9]+'
+	));
+	Router::connect('/messages/:userId', array('controller' => 'conversations', 'action' => 'index'),
+			array('pass'=> array('userId'), ' userId'=> '[0-9]+'));
+	Router::connect('/users/search', array('controller' => 'users', 'action' => 'search'));
+
+
 /**
  * ...and connect the rest of 'Pages' controller's URLs.
  */

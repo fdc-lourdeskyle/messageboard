@@ -15,7 +15,7 @@
                 <?php echo $this->Form->input('password', array('id'=>'UserPassword', 'label'=>'Password', 'class' => "form-input")); ?>
             </div>
             <div class="form-group">
-                <?php echo $this->Form->input('password_confirmation', array('id'=>'UserPasswordConfirmation', 'label'=>'Confirm Password' , 'class' => "form-input")); ?>
+                <?php echo $this->Form->input('password_confirmation', array('id'=>'UserPasswordConfirmation', 'label'=>'Confirm Password' , 'class' => "form-input", "type"=>"password")); ?>
             </div>
             <div>
                 <?php echo $this->Form->submit('Submit', array('class'=>"form-button")); ?>

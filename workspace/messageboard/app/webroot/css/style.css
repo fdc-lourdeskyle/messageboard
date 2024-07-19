@@ -205,8 +205,7 @@ a:visited{
 
 .convo-header{
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: flex-end;
     padding: 10px;
 }
 

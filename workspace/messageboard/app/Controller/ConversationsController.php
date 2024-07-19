@@ -13,7 +13,7 @@ class ConversationsController extends AppController{
         $conversations = $this->Conversation->find('all', array(
             'conditions' => array(
                 'OR' => array(
-                    // 'Conversation.sender_id' => $userId,
+                    'Conversation.sender_id' => $userId,
                     'Conversation.receiver_id' => $userId
                 )
         ),
@@ -149,13 +149,12 @@ class ConversationsController extends AppController{
             try {
                 $messages = $this->Paginator->paginate('Message');
                 if (empty($messages)) {
-                    echo ''; // No more messages
+                    echo ''; 
                     return;
                 }
-
                 $this->set('messages', $messages);
-                $this->layout = 'ajax'; // Ensure this layout is correctly set
-                $this->render('load_more'); // Ensure this view file exists
+                $this->layout = 'ajax'; 
+                $this->render('load_more'); 
 
             } catch (Exception $e) {
                 echo 'Error: ' . $e->getMessage();

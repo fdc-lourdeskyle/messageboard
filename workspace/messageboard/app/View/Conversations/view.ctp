@@ -1,11 +1,13 @@
 
 <div class="convo-container">
     <div class="convo-header">
-        <h4>Messages</h4>
+            <div>
+               
+            </div>
         <div class="reply-form">
             <?php echo $this->Form->create('Message', array('url' => array('controller'=>'conversations','action' => 'reply', $conversations['Conversation']['id'])));?>
             <div class="msg">
-                <?php echo $this->Form->input('message', array('label'=>'Message', 'placeholder' => 'Type your message here...', 'type' => 'textarea', 'class' => "form-input")); ?>
+                <?php echo $this->Form->input('message', array('label'=>false, 'placeholder' => 'Type your message here...', 'type' => 'textarea', 'class' => "msg-input")); ?>
             </div>
             <?php echo $this->Form->submit('Send', array('class'=>"form-button")); ?>
             <?php echo $this->Form->end(); ?>

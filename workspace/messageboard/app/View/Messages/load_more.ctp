@@ -21,6 +21,6 @@
                 </div>
             <?php endforeach; ?>
 
-        <?php else: ?>
-            <p> No messages found </p>
-        <?php endif; ?>
+<?php else: ?>
+    <p> No messages found </p>
+<?php endif; ?>

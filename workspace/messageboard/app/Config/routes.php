@@ -33,6 +33,10 @@
 		'pass' => array('conversationId'),
 		'conversationId' => '[0-9]+'
 	));
+	// Router::connect('/conversations/loadMore/*', array(
+	// 	'controller' => 'conversations',
+	// 	'action' => 'loadMore'
+	// ));
 	Router::connect('/messages/:userId', array('controller' => 'conversations', 'action' => 'index'),
 			array('pass'=> array('userId'), ' userId'=> '[0-9]+'));
 	Router::connect('/users/search', array('controller' => 'users', 'action' => 'search'));

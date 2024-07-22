@@ -24,11 +24,14 @@
 		<?php echo $title_for_layout; ?>
 	</title>
 	<?php
-		echo $this->Html->css('style.css');
+		echo $this->Html->css('style');
 		echo $this->fetch('meta');
-		echo $this->fetch('css');
+		// echo $this->fetch('css');
 		echo $this->fetch('script');
 	?>
+
+	<?php echo $this->Html->css('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css'); ?>
+
 		<!-- jQuery library -->
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -57,11 +60,11 @@
 			<?php endif; ?>
     </div>
 	</div>
-	<div id="container">
-		<div id="content">
+	<div id="con">
+
 			<?php echo $this->Session->flash(); ?>
 			<?php echo $content_for_layout; ?> 
-		</div>
+
 	</div>
 
 </body>

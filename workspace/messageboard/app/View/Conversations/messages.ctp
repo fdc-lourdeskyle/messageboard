@@ -1,14 +1,13 @@
-<div id="message-list">
+<div id="messages-list">
     <?php if (!empty($messages)): ?>
         <?php foreach ($messages as $message): ?>
-            <div class="convo">
+            <div class="convo" id="message-<?php echo $message['Message']['id']; ?>">
                 <div class="convo-content">
-                    <div class="msg-mg">
-                        <?php 
-                            $userPhoto = $message['Sender']['photo'];
-                            $userPhotoUrl = !empty($userPhoto)? $this->Html->url('/img/'.$userPhoto) : null;
+                    <div class="msg-img">
+                        <?php
+                        $userPhoto = !empty($message['Sender']['photo']) ? $this->Html->url('/img/' . $message['Sender']['photo']) : null;
                         ?>
-                        <img id="photoPreview" src="<?php echo $userPhotoUrl; ?>" alt="Sender photo" style="<?php echo $userPhotoUrl ? '' : 'display:none;'; ?> max-width: 100px; max-height: 100px;" />
+                        <img id="photoPreview" src="<?php echo $userPhoto; ?>" alt="Sender photo" style="<?php echo $userPhoto ? '' : 'display:none;'; ?> max-width: 100px; max-height: 100px;" />
                     </div>
                     <div class="msg-content">
                         <div class="msg">
@@ -22,12 +21,7 @@
             </div>
         <?php endforeach; ?>
     <?php else: ?>
-        <p>No messages found</p>
+        <p>No messages found.</p>
     <?php endif; ?>
 </div>
-
-<?php if ($hasMoreMessages): ?>
-    <input type="hidden" id="has-more-messages" value="true" />
-<?php else: ?>
-    <input type="hidden" id="has-more-messages" value="false" />
-<?php endif; ?>
+<input type="hidden" id="has-more-messages" value="<?php echo $hasMoreMessages ? 'true' : 'false'; ?>" />

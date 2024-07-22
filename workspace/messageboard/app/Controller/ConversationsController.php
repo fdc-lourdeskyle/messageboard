@@ -1,24 +1,36 @@
 <?php
 
+App::uses('CakeLog', 'Log');
+
 class ConversationsController extends AppController{
 
     public $uses = array('Conversation', 'Message');
     public $helpers = array('Html', 'Form', 'Url');
-    public $components = array('Paginator');
+    public $components = array('Paginator','RequestHandler');
     
+    public function isAuthorized($user) {
+      
+        if (in_array($this->action, array('index','view', 'reply', 'delete', 'deleteMsg'))) {
+          
+            $userId = $this->request->params['pass'][0];
+            if ($userId == $user['id']) {
+                return true;
+            } else {
+                $this->Session->setFlash(__('You are not authorized to access that page.'));
+                $this->redirect(array('action' => 'index'));
+                return false;
+            }
+        }
+        return parent::isAuthorized($user);
+    }
 
 
     public function index() {
         $userId = $this->Auth->user('id');
+
+        $totalConversations = $this->Conversation->find('count');
         
-        // Get page number from request, default to 1
-        $page = $this->request->query('page');
-        if (!$page) {
-            $page = 1;
-        }
-    
-        // Set up pagination settings
-        $this->paginate = array(
+        $this->Paginator->settings = array(
             'Conversation' => array(
                 'conditions' => array(
                     'OR' => array(
@@ -32,36 +44,14 @@ class ConversationsController extends AppController{
                         'order' => array('Message.created_at DESC')
                     )
                 ),
-                'limit' => 10, // Number of conversations per page
-                'page' => $page
+                'limit' => 10, 
             )
         );
     
-        $conversations = $this->paginate('Conversation');
-        $totalConversations = $this->Conversation->find('count', array(
-            'conditions' => array(
-                'OR' => array(
-                    'Conversation.sender_id' => $userId,
-                    'Conversation.receiver_id' => $userId
-                )
-            )
-        ));
-        $hasMoreConversations = $totalConversations > $this->paginate['Conversation']['limit'] * $page;
-    
-        if ($this->request->is('ajax')) {
-            $this->layout = 'ajax'; // Use ajax layout to avoid full page rendering
-            $this->set('conversations', $conversations);
-            $this->set('hasMoreConversations', $hasMoreConversations);
-            $this->render('/Elements/conversations_list'); // Render the partial view for AJAX
-        } else {
-            $this->set(compact('conversations', 'hasMoreConversations'));
-        }
+        $conversations = $this->Paginator->paginate('Conversation');
+
+        $this->set(compact('conversations','totalConversations'));
     }
-    
-    
-    
-    
-    
     
 
     public function add(){
@@ -132,27 +122,36 @@ class ConversationsController extends AppController{
             throw new ForbiddenException(_('You are not authorized to view this conversation'));
         }
     
-        // Handle AJAX request for additional messages
+       
         $page = $this->request->is('ajax') ? $this->request->query('page') : 1;
     
         $this->paginate = array(
             'Message' => array(
                 'conditions' => array('Message.conversation_id' => $id),
                 'order' => array('Message.created_at ASC'),
-                'limit' => 10, // Show 10 messages per page
+                'limit' => 10, 
                 'page' => $page
             )
         );
     
         $messages = $this->paginate('Message');
-        $hasMoreMessages = count($messages) >= 10; // Check if there are more messages to load
+        $totalMessages = $this->Message->find('count', array('conditions' => array('Message.conversation_id' => $id)));
+        $hasMoreMessages = $totalMessages > $this->paginate['Message']['limit'] * ($this->request->query('page') ? $this->request->query('page') : 1);
     
         if ($this->request->is('ajax')) {
             $this->set(compact('messages', 'hasMoreMessages'));
-            $this->render('messages'); // Render only the messages part of the view
+          
+                $view = new View($this, false);
+                $view->set('messages', $messages);
+                $view->set('hasMoreMessages', $hasMoreMessages);
+                $html = $view->render('messages');
+
+                $this->response->body($html);
+                $this->response->type('html');
         } else {
             $this->set(compact('conversation', 'messages', 'id', 'hasMoreMessages'));
         }
+
     }
     
 
@@ -178,37 +177,41 @@ class ConversationsController extends AppController{
         throw new MethodNotAllowedException();
     }
 
-    // public function loadMore($conversationId) {
-    //     if ($this->request->is('ajax')) {
-    //         $page = $this->request->query('page') ?: 1;
-    //         $limit = $this->request->query('limit') ?: 3;
+    public function delete($id=null){
+        $this->autoRender=false;
+        $this->Conversation->id = $id;
 
-    //         $this->Paginator->settings = array(
-    //             'Message' => array(
-    //                 'conditions' => array('Message.conversation_id' => $conversationId),
-    //                 'order' => array('Message.created_at ASC'),
-    //                 'limit' => $limit,
-    //                 'page' => $page,
-    //                 'contain' => array('Sender')
-    //             )
-    //         );
+        if(!$this->Conversation->exists()){
+            throw new NotFoundException(_('Invalid Conversation'));
+        }
 
-    //         try {
-    //             $messages = $this->Paginator->paginate('Message');
-    //             if (empty($messages)) {
-    //                 echo ''; 
-    //                 return;
-    //             }
-    //             $this->set('messages', $messages);
-    //             $this->layout = 'ajax'; 
-    //             $this->render('load_more'); 
+        if($this->Conversation->delete()){
+            $response = array('status' =>'success', 'message' => 'Conversation deleted');
+        }else{
+      
+            $response = array('status' =>'error', 'message' => 'Conversation can not be deleted');
+        }
 
-    //         } catch (Exception $e) {
-    //             echo 'Error: ' . $e->getMessage();
-    //         }
-    //     } else {
-    //         throw new MethodNotAllowedException();
-    //     }
-    // }
+        echo json_encode($response);
+    }
+
+    public function deleteMsg($id=null){
+        $this->autoRender=false;
+        $this->Message->id = $id;
+
+        if(!$this->Message->exists()){
+            throw new NotFoundException(_('Invalid Message'));
+        }
+
+        if($this->Message->delete()){
+            $response = array('status' =>'success', 'message' => 'Message deleted');
+        }else{
+      
+            $response = array('status' =>'error', 'message' => 'Message can not be deleted');
+        }
+
+        echo json_encode($response);
+    }
     
+
 }

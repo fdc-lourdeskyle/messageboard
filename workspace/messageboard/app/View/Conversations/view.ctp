@@ -1,7 +1,6 @@
 <div class="convo-container">
     <div class="convo-header">
         <div>
-            <!-- Add any additional header content here if needed -->
         </div>
         <div class="reply-form">
             <?php echo $this->Form->create('Message', array('url' => array('controller' => 'conversations', 'action' => 'reply', $conversation['Conversation']['id']))); ?>
@@ -13,7 +12,6 @@
         </div>
     </div>
     <div class="convo-list" id="message-list">
-        <!-- Include the messages partial view here -->
         <?php echo $this->element('Messages', array('messages' => $messages, 'hasMoreMessages' => $hasMoreMessages)); ?>
     </div>
     <?php if ($hasMoreMessages): ?>
@@ -33,16 +31,17 @@ $(document).ready(function() {
             data: { page: page },
             dataType: 'html',
             success: function(response) {
+
                 var newMessages = $(response).find('#message-list').html();
+                
                 $('#message-list').append(newMessages);
 
-                // Check if there are more messages to load
                 var hasMoreMessages = $(response).find('#has-more-messages').val() === 'true';
 
                 if (!hasMoreMessages) {
-                    button.hide(); // Hide button if no more messages
+                    button.hide(); 
                 } else {
-                    button.data('page', page + 1); // Update page number for next request
+                    button.data('page', page + 1); 
                 }
             },
             error: function() {
@@ -50,5 +49,35 @@ $(document).ready(function() {
             }
         });
     });
+
+    $('.delete-message').click(function(e){
+        e.preventDefault();
+        var $this = $(this);
+        var messageId = $this.data('id');
+        var messageElement = $('#message-' + messageId);
+        console.log(messageElement);
+
+        $.ajax({
+            url:'/conversations/deleteMsg/' + messageId,
+            type: 'POST',
+            dataType: 'json',
+            success: function(response) {
+                if(response.status === 'success'){
+                    messageElement.fadeOut(500, function(){
+                        $(this).remove();
+                    });
+                }else{
+                    alert(response.message);
+                }
+            },
+            error: function(xhr, status, error){
+                console.log('Error:', error);
+                console.log('Status', status);
+                console.dir(xhr);
+                alert('Error deleting conversation');
+            }
+        });
+    });
+
 });
 </script>

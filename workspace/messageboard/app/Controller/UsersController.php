@@ -45,6 +45,22 @@ class UsersController extends AppController {
         $this->set('user', $this->User->read(NULL,$id));
     }
 
+    public function isAuthorized($user) {
+      
+        if (in_array($this->action, array('view', 'edit', 'delete', 'change_email', 'change_password'))) {
+          
+            $userId = $this->request->params['pass'][0];
+            if ($userId == $user['id']) {
+                return true;
+            } else {
+                $this->Session->setFlash(__('You are not authorized to access that page.'));
+                $this->redirect(array('action' => 'index'));
+                return false;
+            }
+        }
+        return parent::isAuthorized($user);
+    }
+
     public function login(){     
         if($this->request->is('post')){
         

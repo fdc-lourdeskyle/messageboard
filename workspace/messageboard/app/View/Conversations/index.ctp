@@ -1,58 +1,158 @@
+<style>
+    .message-text{
+        max-height: 100px;
+        width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        transition: max-height 0.3s ease;
+    }
+
+    .message-text.expanded{
+        max-height: none;
+        white-space: normal;
+        overflow: visible;
+    }
+
+    .show-more-msg, .show-less{
+        display: inline-block;
+        margin-top: 10px;
+        color: #007bff;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .show-less {
+        display: none;
+    }
+</style>
 <div class="convo-container">
     <div class="convo-header">
         <div class="msg-header">
             <h4>Your Messages</h4>
         </div>
         <div>
-            <?php echo $this->Html->link('New Message', array('controller' => 'conversations', 'action' => 'add'), array('class' => 'new-message-button')); ?>
+            <?php echo $this->Html->link('New Message', array('controller' => 'conversations', 'action' => 'add'),array('class' => 'new-message-button')); ?>
         </div>
     </div>
     <div class="convo-list" id="messages-container">
-        <!-- Include the conversations partial view here -->
-        <?php echo $this->element('conversations_list', array('conversations' => $conversations)); ?>
+        <?php if (!empty($conversations)): ?>
+            <?php foreach ($conversations as $conversation): ?>
+                <div class="convo" id="conversation-<?php echo $conversation['Conversation']['id']; ?>">
+                    <div class="convo-content">
+                        <div class="msg-img">
+                            <?php
+                            $senderPhoto = !empty($conversation['Sender']['photo']) ? $this->Html->url('/img/' . $conversation['Sender']['photo']) : null;
+                            ?>
+                            <img id="photoPreview" src="<?php echo $senderPhoto; ?>" alt="Sender photo" style="<?php echo $senderPhoto ? '' : 'display:none;'; ?> max-width: 100px; max-height: 100px;" />
+                        </div>
+                        <div class="msg-content">
+                            <?php if (!empty($conversation['Message'])): ?>
+                                <?php
+                                $latestMessage = end($conversation['Message']);
+                                ?>
+                                <div class="msg">
+                                    <p class="message-text"><?php echo h($latestMessage['message']); ?></p>
+                                    <span class="show-more-msg">Show More</span>
+                                    <span class="show-less" style="display:none;">Show Less</span>
+                                </div>
+                                <div class="timestamp">
+                                    <?php echo h($latestMessage['created_at']); ?>
+                                </div>
+                            <?php else: ?>
+                                <div class="msg">
+                                    No messages yet.
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <div class="msg-action-btns">
+                                        <?php echo $this->Html->link('Open Message', array('action'=>'view', $conversation['Conversation']['id'])); ?>
+                                        <?php echo $this->Html->link('Delete Message', array('action'=>'delete', $conversation['Conversation']['id']), array('class'=>'delete-conversation','data-id'=>$conversation['Conversation']['id'], 'escape'=>false, 'onclick'=>'return false;')); ?>
+                                    </div>
+
+                
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No conversations found.</p>
+        <?php endif; ?>
     </div>
-    <?php if ($hasMoreConversations): ?>
-        <button id="show-more-conversations" data-page="2">Show More</button>
+    <?php if ($totalConversations >= 10): ?>
+        
+        <div class="paging">
+            <?php
+                echo $this->Paginator->next(('Show More'), array(), null, array('class' => 'disabled'));
+            ?>
+        </div>
+    
     <?php endif; ?>
 </div>
 
-
 <script>
-$(document).ready(function() {
-    $('#show-more-conversations').on('click', function() {
-        var button = $(this);
-        var page = button.data('page');
+        $(document).ready(function(){
+            $('.delete-conversation').click(function(e){
 
-        $.ajax({
-            url: '/conversations/index',
-            data: { page: page },
-            dataType: 'html',
-            success: function(response) {
-                // Log the entire response for debugging
-                console.log(response);
+                e.preventDefault();
+                var $this = $(this);
+                var conversationId = $this.data('id');
+                var conversationElement = $('#conversation-' + conversationId);
+                console.log(conversationElement);
 
-                // Extract the new conversations from the response
-                var newConversations = $(response).find('.convo-list').html();
-                console.log("New Conversations: ", newConversations);
+                $.ajax({
+                    url:'/conversations/delete/' + conversationId,
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function(response) {
+                        if(response.status === 'success'){
+                            conversationElement.fadeOut(500, function(){
+                                $(this).remove();
+                            });
+                        }else{
+                            alert(response.message);
+                        }
+                    },
+                    error: function(xhr, status, error){
+                        console.log('Error:', error);
+                        console.log('Status', status);
+                        console.dir(xhr);
+                        alert('Error deleting conversation');
+                    }
+                });
+            });
+        });
 
-                // Append the new conversations to the container
-                // Insert new conversations at the top of the container
-                $('#messages-container').prepend(newConversations);
+        $(document).ready(function() {
 
-                // Check if there are more conversations to load
-                var hasMoreConversations = $(response).find('#has-more-conversations').val() === 'true';
-                if (!hasMoreConversations) {
-                    button.hide(); // Hide button if no more conversations
-                } else {
-                    button.data('page', page + 1); // Update page number for next request
-                }
-            },
-            error: function() {
-                alert('An error occurred while loading more conversations.');
+            function isTextOverflowing(element) {
+                return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
             }
+
+    $('.message-text').each(function() {
+        var $msgText = $(this);
+        var $showMore = $msgText.siblings('.show-more-msg');
+        var $showLess = $showMore.siblings('.show-less');
+        
+        if (isTextOverflowing(this)) {
+            $showMore.show();
+        } else {
+            $showMore.hide();
+        }
+
+        $showMore.on('click', function(e) {
+            e.preventDefault();
+            $msgText.addClass('expanded');
+            $showMore.hide();
+            $showLess.show();
+        });
+
+        $showLess.on('click', function(e) {
+            e.preventDefault();
+            $msgText.removeClass('expanded');
+            $showLess.hide();
+            $showMore.show();
         });
     });
 });
 
 </script>
-

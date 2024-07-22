@@ -54,37 +54,80 @@ body{
 
 #con{
     /* background-color: #e9ecef; */
-    width: 300px;
+    width: 100%;
     height: 50px;
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    flex-direction: column;
 }
 
 
 .action-container{
+    width: max-content;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
     display: flex;
     flex-direction: row;
     justify-content:center;
-    padding: 10px;
+    margin-top: 80px;
+    padding: 20px;
+}
+
+.user-action-container{
+    width: max-content;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    justify-content:center;
+    margin-top: -10px;
+    padding: 20px;
 }
 
 .action-button{
-    text-decoration: underline;
+    background-color: #faf0ca;
+    width: 200px;
+    height: 15px;
+    padding: 1em;
     color:black;
     border-radius: 5px;
+    text-align: center;
+    border: 2px solid #f4f3ee;
+    margin-left: 10px;
+    margin-right: 10px;
+    box-shadow: -4px 7px 1px 0px #0d3b66;
+}
+
+.file-upload-button{
+    width: 200px;
+    font-size: 22px;
+}
+
+.user-action-button{
+    background-color: #faf0ca;
+    width: 150px;
+    height: 10px;
+    padding: 1em;
+    color:black;
+    border-radius: 5px;
+    text-align: center;
+    border: 2px solid #f4f3ee;
+    margin-left: 10px;
+    margin-right: 10px;
+    box-shadow: -4px 7px 1px 0px #0d3b66;
+    font-size: 12px;
+}
+
+
+a{
+    margin-bottom: 10px;
     font-family: Tahoma, Geneva, sans-serif;
-    font-size: 16px;
     font-weight: 400;
     font-style: normal;
     font-variant: normal;
     text-transform: uppercase;
-    margin-left: 10px;
-    margin-right: 10px;
-}
-
-a{
+    text-align:center;
     color: black;
     text-decoration: none;
 }
@@ -92,6 +135,83 @@ a{
 a:visited{
     color: black;
 }
+
+.users-header{
+    text-align: center;
+}
+
+.profile-container{
+    background-color: #f4f3ee ;
+    width: max-content;
+    height: max-content;
+    margin-top: 30px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    border: #000000 solid 2px;
+    box-shadow: inset;
+}
+
+.profile-upper-content{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    width: 500px;
+    height: max-content;
+}
+
+.profile-lower-content{
+    padding: 10px;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    border-top: #000000 solid 1px;
+    border-bottom: #000000 solid 1px;
+}
+
+.profile-img{
+    background-color: white;
+    padding: 10px;
+    max-width: 300px;
+    max-height: 300px;
+    border: white solid 1px;
+    border-radius: 10px;
+}
+
+#photoPreview{
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.profile-details{
+    margin-left: 2px;
+    padding: 10px;
+    width: 600px;
+    height: 300px;
+}
+
+.prof-details-name{
+    text-align: center;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.prof-details{
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.prof-details-desc{
+    margin-top: -10px;
+    font-size: 18px;
+    font-weight: 400;
+    text-indent: 10px;
+}
+
 
 .registration-container{
     width: max-content;
@@ -152,10 +272,40 @@ a:visited{
 }
 
 .form-input{
-    height: 30px;
+    height: 20px;
     width: 230px;
-    margin-top: 10px;
+    margin-top: 20px;
     color: black;
+}
+
+.edit-input{
+    width: 120px;
+    height: 2.5rem;
+    padding: 0 1.25rem;
+    border: 1px solid black;
+    border-radius: 2px;
+}
+
+.edit-input-container{
+    margin-top: 10px;
+}
+
+.ui-datepicker-trigger{
+    width: 35px;
+    position: absolute;
+    margin-top: 4px;
+    right: 34.8%;
+    border:none;
+    background: none;
+}
+
+.ui-datepicker{
+    width: 200px;
+    position:relative;
+}
+
+#birthdate {
+    padding:10px;
 }
 
 .form-button{
@@ -228,7 +378,7 @@ a:visited{
 
 .new-message-button{
     background-color: #f8f9fa;
-    font-size: 16px;
+    font-size: 12px;
     border: 1px solid black;
     border-radius: 5px;
     padding: 10px;
@@ -244,14 +394,35 @@ a:visited{
  margin-right: 5px;
 }
 
-.msg-content{
-    position: relative;
-    padding: 10px 14px 10px 10px;
-    width: 600px;
-}
-
 .timestamp{
+    font-size: 8px;
     position: absolute;
     bottom: 0;
     right: 0;
+}
+
+.message-text{
+    max-height: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: max-height 0.3s ease;
+}
+
+.message-text.expanded{
+    max-height: none;
+    white-space: normal;
+    overflow: visible;
+}
+
+.show-more-msg, .show-less{
+    display: inline-block;
+    margin-top: 10px;
+    color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.show-less {
+    display: none;
 }

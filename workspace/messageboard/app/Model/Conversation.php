@@ -15,7 +15,7 @@ Class Conversation extends AppModel{
     public $hasMany = array(
         'Message' => array(
             'className' => 'Message',
-            'foreginKey' => 'conversation_id',
+            'foreignKey' => 'conversation_id',
             'dependent' => true
         )
     );

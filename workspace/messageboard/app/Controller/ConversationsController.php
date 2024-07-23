@@ -204,10 +204,20 @@ class ConversationsController extends AppController{
             throw new NotFoundException(__('Invalid Message'));
         }
 
+        $message = $this->Message->findById($id);
+        $conversationId = $message['Message']['conversation_id'];
+
         if($this->Message->delete()){
+            $remainingMessages = $this->Message->find('count', array(
+                'conditions' => array('Message.conversation_id' => $conversationId)
+            ));
+
+            if($remainingMessages == 0){
+                $this->Conversation->delete($conversationId);
+            }
             $response = array('status' =>'success', 'message' => 'Message deleted');
+           
         }else{
-      
             $response = array('status' =>'error', 'message' => 'Message can not be deleted');
         }
 

@@ -533,6 +533,10 @@ a:visited{
 .flash-success{
     background-color: green;
     border: 1px solid darkgreen;
+    color: #e7ecef;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
 }
 
 .flash-error{

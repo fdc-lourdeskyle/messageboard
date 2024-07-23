@@ -37,7 +37,7 @@
         <div class="profile-lower-content">
 
             <div class="edit-input-container">
-                    <label for="hobby" class="form__label">Hobby</label>
+                    <label for="hobby" class="form__label" style="margin-bottom: 10px;">Hobby</label>
                     <?php echo $this->Form->input('hobby', array('label' => false, 'type' => 'textarea', 'class' => 'text-edit-input')); ?>
             </div>
 

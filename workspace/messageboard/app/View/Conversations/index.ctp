@@ -32,7 +32,8 @@
             <h4>Your Messages</h4>
         </div> -->
         <div style="margin-bottom:10px;">
-             <?php echo $this->Form->button('Back', array('type' => 'button', 'onclick' => "location.href='" . $this->Html->url(array('controller' => 'users', 'action' => 'index')) . "'", 'class' => 'form-button')); ?>
+            <!-- <?php echo $this->Form->button('Back', array('type' => 'button', 'onclick' => "location.href='" . $this->Html->url(array('controller' => 'users', 'action' => 'index')) . "'", 'class' => 'form-button')); ?> -->
+            <?php echo $this->Form->button('Back', array('type' => 'button', 'onclick' => "window.history.back();", 'class' => 'form-button')); ?>
             <?php echo $this->Html->link('New Message', array('controller' => 'conversations', 'action' => 'add'),array('class' => 'new-message-button')); ?>
         </div>
     </div>
@@ -77,14 +78,14 @@
             <p>No conversations found.</p>
         <?php endif; ?>
     </div>
-    <?php if ($totalConversations >= 10): ?> 
-        <div class="paging">
+    <?php if ($currentPageCount >= 10): ?> 
+        <div class="paging form-button">
             <?php
-                echo $this->Paginator->next(('Show More'), array(), null, array('class' => 'disabled'));
+                echo $this->Paginator->next(('Show More'), array(), null, array('class' => 'enabled'));
             ?>
         </div>
     <?php else: ?>
-        <div class="paging">
+        <div class="paging" style="display: none;">
             <?php
                 echo $this->Paginator->next(('Show More'), array(), null, array('class' => 'hidden'));
             ?>
@@ -160,31 +161,5 @@
             });
         });
 
-        $(document).ready(function(){
-            $('#show-more-conversations').on('click', function(e){
-                e.preventDefault();
-                var button = $(this);
-                var page = button.data('page');
 
-                $.ajax({
-                    url: '/conversations/index',
-                    data: {page: page},
-                    dataType: 'html',
-                    success: function(response){
-                        var newConversations = $(response).find('.convo-list').html();
-                        $('#messages-container').append($(response).find('.convo-list').html());
-
-                        var hasMoreConversations = $(response).find('#has-more-conversations').val() === 'true';
-                        if(!hasMoreConversations){
-                            button.hide();
-                        }else{
-                            button.data('page', page + 1);
-                        }
-                    },
-                    error: function(){
-                        alert('An error occured while loading more conversations.');
-                    }
-                });
-            });
-        });
 </script>

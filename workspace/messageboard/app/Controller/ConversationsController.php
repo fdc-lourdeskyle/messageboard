@@ -49,8 +49,9 @@ class ConversationsController extends AppController{
         );
     
         $conversations = $this->Paginator->paginate('Conversation');
+        $currentPageCount = count($conversations);
 
-        $this->set(compact('conversations','totalConversations'));
+        $this->set(compact('conversations','totalConversations','currentPageCount'));
     }
     
 

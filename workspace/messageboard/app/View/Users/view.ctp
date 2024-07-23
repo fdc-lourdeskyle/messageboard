@@ -32,16 +32,20 @@
 
             <div class="user-action-button">
             <a href="<?php echo $this->Html->url(array('controller' => 'users', 'action' => 'edit', $currentUserId)); ?>">
-            <i class="fa-solid fa-user" style="color: #ee964b; font-size: 8px; margin-right: 10px;"></i> Update
+            <i class="fa-solid fa-user" style="color: #ee964b; font-size: 12px; margin-right: 10px;"></i> Update
             </a>
             </div>
             <div class="user-action-button">
                 <a href="<?php echo $this->Html->url(array('controller' => 'users', 'action' => 'change_password', $currentUserId)); ?>">
-                <i class="fa-solid fa-message" style="color: #ee964b; font-size: 8px; margin-right: 10px;"></i> Change Password </a>
+                <i class="fa-solid fa-lock" style="color: #ee964b; font-size: 12px; margin-right: 10px;"></i> Change Password </a>
             </div>
             <div class="user-action-button">
                 <a href="<?php echo $this->Html->url(array('controller' => 'users', 'action' => 'change_email', $currentUserId)); ?>">
-                <i class="fa-solid fa-message" style="color: #ee964b; font-size: 8px; margin-right: 10px;"></i> Change Email </a>
+                <i class="fa-solid fa-envelope" style="color: #ee964b; font-size: 12px; margin-right: 10px;"></i> Change Email </a>
+            </div>
+            <div class="user-action-button">
+                <a href="<?php echo $this->Html->url(array('controller' => 'users', 'action' => 'index', $currentUserId)); ?>">
+                Back </a>
             </div>
         </div>
 

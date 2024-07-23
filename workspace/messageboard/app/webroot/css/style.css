@@ -53,11 +53,24 @@ body{
 }
 
 #con{
-    /* background-color: #e9ecef; */
-    width: 100%;
+    width: max-content;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    width: max-content;
     height: 50px;
 }
 
+#user-con{
+    width: max-content;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+}
 
 .action-container{
     width: max-content;
@@ -85,6 +98,19 @@ body{
     padding: 20px;
 }
 
+.edit-input-container{
+    margin-top: 20px;
+}
+
+.text-edit-input{
+    width: 300px;
+}
+
+input[type="textarea"]{
+    width: 300px;
+}
+
+
 .action-button{
     background-color: #faf0ca;
     width: 200px;
@@ -99,9 +125,19 @@ body{
     box-shadow: -4px 7px 1px 0px #0d3b66;
 }
 
-.file-upload-button{
-    width: 200px;
-    font-size: 22px;
+.custom-file-upload{
+    margin-top: 10px;
+    border-radius: 8px;
+    border: #000000 solid 1px;
+    background-color: white;
+    width: 300px;
+    padding: 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+input[type="file"] {
+    display: none;
 }
 
 .user-action-button{
@@ -176,21 +212,22 @@ a:visited{
 .profile-img{
     background-color: white;
     padding: 10px;
-    max-width: 300px;
-    max-height: 300px;
+    /* width: 300px; */
+    height: max-content;
     border: white solid 1px;
     border-radius: 10px;
+    /* margin-right: 20px; */
 }
 
 #photoPreview{
-    max-width: 100%;
-    max-height: 100%;
+    width: 300px;
+    height: 330px;
 }
 
 .profile-details{
-    margin-left: 2px;
+    margin-left: 10px;
     padding: 10px;
-    width: 600px;
+    width: 700px;
     height: 300px;
 }
 
@@ -227,14 +264,15 @@ a:visited{
 }
 
 .login-container{
-    width: 250px;
-    height: 330px;
+    width: max-content;
+    height: max-content;
     margin-top: 100px;
     padding: 15px 60px 15px 60px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-items: center;
+    /* justify-content: center; */
     background-color: #e7ecef;
     box-shadow: -4px 3px 6px 0px rgba(40,75,99,0.16);
 }
@@ -260,7 +298,7 @@ a:visited{
 }
 
 .title-text{
-    margin-left: 70px;
+    /* margin-left: 70px; */
     justify-self: center;
 }
 
@@ -279,11 +317,25 @@ a:visited{
 }
 
 .edit-input{
-    width: 120px;
+    width: 135px;
     height: 2.5rem;
     padding: 0 1.25rem;
     border: 1px solid black;
     border-radius: 2px;
+}
+
+.custom-button {
+    padding: 10px;
+    background: white;
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+}
+
+
+.form__label{
+    margin-bottom:20px;
 }
 
 .edit-input-container{
@@ -308,18 +360,27 @@ a:visited{
     padding:10px;
 }
 
+.msg-edit-input{
+    margin-top: 10px;
+    width:380px;
+    height: 200px;
+}
+
 .form-button{
+    margin-top: 10px;
     width: max-content;
     height: max-content;
     padding: 10px 10px 10px 10px;
     color: black;
-    background-color: #e9ecef;
+    background-color: white;
     font-weight: 600;
     border-radius: 5px;
-    border: none;
+    border: black solid 1px;
+    cursor: pointer;
+
 }
 .form-button:hover{
-    color: white;
+    color: black;
     background-color: #e5e5e5;
 }
 
@@ -338,7 +399,7 @@ a:visited{
 }
 
 .convo-container{
-    width: 500px;
+    width: 100%;
     height: 200px;
     margin-top: 5%;
     margin-left: auto;
@@ -348,6 +409,8 @@ a:visited{
 }
 
 .convo{
+    margin-top: 20px;
+    border-bottom: #000000 solid 1px;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -355,11 +418,13 @@ a:visited{
 
 .convo-header{
     display: flex;
+    flex-direction: row;
     justify-content: flex-end;
     padding: 10px;
 }
 
 .convo-list{
+    width: 100%;
     background-color: white;
     border: 1px solid #000000;
     padding: 10px;
@@ -377,16 +442,36 @@ a:visited{
 }
 
 .new-message-button{
-    background-color: #f8f9fa;
+    margin-right: -10px;
+    background-color: white;
     font-size: 12px;
     border: 1px solid black;
     border-radius: 5px;
     padding: 10px;
+    cursor: pointer;
+}
+
+.msg{
+    margin-top: 20px;
+    margin-left: 20px;
+}
+
+.msg-header{
+    margin-top: 10%;
+    display: flex;
+    flex-direction: row;
+   
+}
+
+.msg-receiver-input{
+    margin-top:80px;
+    margin-left: 10px;
 }
 
 .msg-action-btns{
+    font-size: 12px;
     margin-top: 10px;
-    margin-left: 10px;
+    margin-bottom: 10px;
 }
 
 .msg-img{
@@ -394,8 +479,12 @@ a:visited{
  margin-right: 5px;
 }
 
+.msg-input{
+    width:500px;
+}
+
 .timestamp{
-    font-size: 8px;
+    font-size: 12px;
     position: absolute;
     bottom: 0;
     right: 0;
@@ -417,7 +506,6 @@ a:visited{
 
 .show-more-msg, .show-less{
     display: inline-block;
-    margin-top: 10px;
     color: #007bff;
     text-decoration: none;
     cursor: pointer;
@@ -425,4 +513,39 @@ a:visited{
 
 .show-less {
     display: none;
+}
+
+.reply-form{
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+}
+
+.flash-message{
+    padding: 10px;
+    margin:10px 0;
+    border-radius: 5px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: white;
+}
+
+.flash-success{
+    background-color: green;
+    border: 1px solid darkgreen;
+}
+
+.flash-error{
+    background-color: red;
+    border: 1px solid darkred;
+}
+
+.flash-info{
+    background-color: skyblue;
+    border: 1px solid darkblue;
+}
+
+.message-btns-container{
+    display: flex;
+    flex-direction: row;
 }

@@ -33,6 +33,12 @@
 		'pass' => array('conversationId'),
 		'conversationId' => '[0-9]+'
 	));
+	Router::connect(
+		'/conversations/deleteMsg/:id',
+		array('controller' => 'conversations', 'action' => 'deleteMsg'),
+		array('pass' => array('id'), 'id' => '[0-9]+')
+	);
+	
 	// Router::connect('/conversations/loadMore/*', array(
 	// 	'controller' => 'conversations',
 	// 	'action' => 'loadMore'

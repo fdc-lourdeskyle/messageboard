@@ -28,10 +28,11 @@
 </style>
 <div class="convo-container">
     <div class="convo-header">
-        <div class="msg-header">
+        <!-- <div class="msg-header">
             <h4>Your Messages</h4>
-        </div>
-        <div>
+        </div> -->
+        <div style="margin-bottom:10px;">
+             <?php echo $this->Form->button('Back', array('type' => 'button', 'onclick' => "location.href='" . $this->Html->url(array('controller' => 'users', 'action' => 'index')) . "'", 'class' => 'form-button')); ?>
             <?php echo $this->Html->link('New Message', array('controller' => 'conversations', 'action' => 'add'),array('class' => 'new-message-button')); ?>
         </div>
     </div>
@@ -67,27 +68,30 @@
                         </div>
                     </div>
                     <div class="msg-action-btns">
-                                        <?php echo $this->Html->link('Open Message', array('action'=>'view', $conversation['Conversation']['id'])); ?>
-                                        <?php echo $this->Html->link('Delete Message', array('action'=>'delete', $conversation['Conversation']['id']), array('class'=>'delete-conversation','data-id'=>$conversation['Conversation']['id'], 'escape'=>false, 'onclick'=>'return false;')); ?>
-                                    </div>
-
-                
+                        <?php echo $this->Html->link('Open', array('action'=>'view', $conversation['Conversation']['id'])); ?>
+                        <?php echo $this->Html->link('Delete ', array('action'=>'delete', $conversation['Conversation']['id']), array('class'=>'delete-conversation','data-id'=>$conversation['Conversation']['id'], 'escape'=>false, 'onclick'=>'return false;')); ?>
+                    </div> 
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
             <p>No conversations found.</p>
         <?php endif; ?>
     </div>
-    <?php if ($totalConversations >= 10): ?>
-        
+    <?php if ($totalConversations >= 10): ?> 
         <div class="paging">
             <?php
                 echo $this->Paginator->next(('Show More'), array(), null, array('class' => 'disabled'));
             ?>
         </div>
-    
+    <?php else: ?>
+        <div class="paging">
+            <?php
+                echo $this->Paginator->next(('Show More'), array(), null, array('class' => 'hidden'));
+            ?>
+        </div>
     <?php endif; ?>
 </div>
+
 
 <script>
         $(document).ready(function(){
@@ -120,6 +124,7 @@
                     }
                 });
             });
+            
         });
 
         $(document).ready(function() {
@@ -128,31 +133,58 @@
                 return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
             }
 
-    $('.message-text').each(function() {
-        var $msgText = $(this);
-        var $showMore = $msgText.siblings('.show-more-msg');
-        var $showLess = $showMore.siblings('.show-less');
-        
-        if (isTextOverflowing(this)) {
-            $showMore.show();
-        } else {
-            $showMore.hide();
-        }
+            $('.message-text').each(function() {
+                var $msgText = $(this);
+                var $showMore = $msgText.siblings('.show-more-msg');
+                var $showLess = $showMore.siblings('.show-less');
+                
+                if (isTextOverflowing(this)) {
+                    $showMore.show();
+                } else {
+                    $showMore.hide();
+                }
 
-        $showMore.on('click', function(e) {
-            e.preventDefault();
-            $msgText.addClass('expanded');
-            $showMore.hide();
-            $showLess.show();
+                $showMore.on('click', function(e) {
+                    e.preventDefault();
+                    $msgText.addClass('expanded');
+                    $showMore.hide();
+                    $showLess.show();
+                });
+
+                $showLess.on('click', function(e) {
+                    e.preventDefault();
+                    $msgText.removeClass('expanded');
+                    $showLess.hide();
+                    $showMore.show();
+                });
+            });
         });
 
-        $showLess.on('click', function(e) {
-            e.preventDefault();
-            $msgText.removeClass('expanded');
-            $showLess.hide();
-            $showMore.show();
-        });
-    });
-});
+        $(document).ready(function(){
+            $('#show-more-conversations').on('click', function(e){
+                e.preventDefault();
+                var button = $(this);
+                var page = button.data('page');
 
+                $.ajax({
+                    url: '/conversations/index',
+                    data: {page: page},
+                    dataType: 'html',
+                    success: function(response){
+                        var newConversations = $(response).find('.convo-list').html();
+                        $('#messages-container').append($(response).find('.convo-list').html());
+
+                        var hasMoreConversations = $(response).find('#has-more-conversations').val() === 'true';
+                        if(!hasMoreConversations){
+                            button.hide();
+                        }else{
+                            button.data('page', page + 1);
+                        }
+                    },
+                    error: function(){
+                        alert('An error occured while loading more conversations.');
+                    }
+                });
+            });
+        });
 </script>

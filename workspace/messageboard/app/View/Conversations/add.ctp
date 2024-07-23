@@ -1,16 +1,17 @@
-<div class="msg-container">
+<div class="con">
         <div class="msg-header">
-                <div>
-                    <h4>New Message</h4>
-                    <?php echo $this->Form->create('Conversation', array('url' => array('action' => 'add'))); ?>
+                <div style="margin-left:10px;">
+                    <h4>NEW MESSAGE</h4>
                 </div>
-                <div>
-                    <?php echo $this->Form->input('receiver_id', array('id'=>'receiver_id', 'label'=>'Send Message To', 'type' => 'select', 'class' => "form-input")); ?>
+                <div class="msg-receiver-input">
+                    <?php echo $this->Form->create('Conversation', array('url' => array('action' => 'add'))); ?>
+                    <?php echo $this->Form->input('receiver_id', array('id'=>'receiver_id', 'label'=>false, 'type' => 'select', 'class' => "form-input")); ?>
                 </div>
         </div>
         <div class="msg-table">
             <div class="msg">
-                <?php echo $this->Form->input('Message.message', array('label'=>'Message', 'type' => 'textarea', 'class' => "form-input")); ?>
+                <label for="message" class="form__label" style="font-size:18px;">Message:</label>
+                <?php echo $this->Form->input('Message.message', array('label' => false, 'type' => 'textarea', 'class' => 'msg-edit-input')); ?>
             </div>
             <div>
                 <?php echo $this->Form->submit('Submit', array('class'=>"form-button")); ?>
@@ -18,6 +19,11 @@
             </div>
         </div>
 </div>
+
+
+
+
+
 
 
 <script type="text/javascript">

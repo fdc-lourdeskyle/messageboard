@@ -1,4 +1,4 @@
-<div id="con">
+<div id="user-con">
     <div class="action-container">
         <div class="action-button">
             <a href=""><?php echo $this->Html->link('My Profile', array('action'=>'view', $currentUserId)); ?></a>

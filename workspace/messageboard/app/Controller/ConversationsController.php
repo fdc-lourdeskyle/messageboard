@@ -8,21 +8,21 @@ class ConversationsController extends AppController{
     public $helpers = array('Html', 'Form', 'Url');
     public $components = array('Paginator','RequestHandler');
     
-    public function isAuthorized($user) {
+    // public function isAuthorized($user) {
       
-        if (in_array($this->action, array('index','view', 'reply', 'delete', 'deleteMsg'))) {
+    //     if (in_array($this->action, array('index','view', 'reply', 'delete', 'deleteMsg'))) {
           
-            $userId = $this->request->params['pass'][0];
-            if ($userId == $user['id']) {
-                return true;
-            } else {
-                $this->Session->setFlash(__('You are not authorized to access that page.'));
-                $this->redirect(array('action' => 'index'));
-                return false;
-            }
-        }
-        return parent::isAuthorized($user);
-    }
+    //         $userId = $this->request->params['pass'][0];
+    //         if ($userId == $user['id']) {
+    //             return true;
+    //         } else {
+    //             $this->Session->setFlash(__('You are not authorized to access that page.'));
+    //             $this->redirect(array('action' => 'index'));
+    //             return false;
+    //         }
+    //     }
+    //     return parent::isAuthorized($user);
+    // }
 
 
     public function index() {
@@ -200,7 +200,7 @@ class ConversationsController extends AppController{
         $this->Message->id = $id;
 
         if(!$this->Message->exists()){
-            throw new NotFoundException(_('Invalid Message'));
+            throw new NotFoundException(__('Invalid Message'));
         }
 
         if($this->Message->delete()){

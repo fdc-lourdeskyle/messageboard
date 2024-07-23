@@ -48,7 +48,9 @@
                             <?php echo h($message['Message']['created_at']); ?>
                         </div>
                     </div>
-                    <?php echo $this->Html->link('Delete Message', array('action'=>'deleteMsg', $message['Message']['id']), array('class'=>'delete-message','data-id'=>$message['Message']['id'], 'escape'=>false, 'onclick'=>'return false;')); ?>
+                </div>
+                <div class="msg-action-btns">
+                        <?php echo $this->Html->link('Delete Message', array('action'=>'deleteMsg', $message['Message']['id']), array('class'=>'delete-message','data-id'=>$message['Message']['id'], 'escape'=>false, 'onclick'=>'return false;')); ?>
                 </div>
             </div>
         <?php endforeach; ?>
@@ -64,37 +66,6 @@
 <?php endif; ?>
 
 <script>
-$(document).ready(function() {
-    $('.delete-message').click(function(e){
-        e.preventDefault();
-        var $this = $(this);
-        var messageId = $this.data('id');
-        var messageElement = $('#message-' + messageId);
-        console.log(messageElement);
-
-        $.ajax({
-            url:'/conversations/deleteMsg/' + messageId,
-            type: 'POST',
-            dataType: 'json',
-            success: function(response) {
-                if(response.status === 'success'){
-                    messageElement.fadeOut(500, function(){
-                        $(this).remove();
-                    });
-                }else{
-                    alert(response.message);
-                }
-            },
-            error: function(xhr, status, error){
-                console.log('Error:', error);
-                console.log('Status', status);
-                console.dir(xhr);
-                alert('Error deleting conversation');
-            }
-        });
-    });
-});
-
 $(document).ready(function() {
 
     function isTextOverflowing(element) {
@@ -126,5 +97,5 @@ $(document).ready(function() {
                 $showMore.show();
             });
         });
-    });
+});
 </script>

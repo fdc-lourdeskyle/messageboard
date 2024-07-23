@@ -1,6 +1,7 @@
-<div id="con">
+
+    <div id="con">
         <div class="login-container">
-        <h1 class="title-text">Change Password</h1>
+            <h1 class="title-text">Change Password</h1>
             <?php 
                     echo $this->Form->create('User', array('url' => array('controller' => 'users', 'action' => 'change_password')));
             ?>
@@ -19,3 +20,4 @@
             <?php echo $this->Form->end(); ?>
         </div>
     </div>
+

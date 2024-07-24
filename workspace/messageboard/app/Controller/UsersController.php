@@ -37,7 +37,7 @@ class UsersController extends AppController {
     public $uses = array('User');
 
     public function beforeFilter(){
-        parent::beforeFilter(); //calling the parent function that is in AppController
+        parent::beforeFilter();
         $this->Auth->allow('thankyou');
     }
 
@@ -53,7 +53,7 @@ class UsersController extends AppController {
             if ($userId == $user['id']) {
                 return true;
             } else {
-                $this->Session->setFlash(__('You are not authorized to access that page.'));
+                $this->Session->setFlash(__('You are not authorized to access that page.'), 'default', array('class'=>'flash-error'));
                 $this->redirect(array('action' => 'index'));
                 return false;
             }
@@ -70,7 +70,7 @@ class UsersController extends AppController {
                 $this->User->saveField('last_login_time', date('Y-m-d H:i:s'));
                 $this->redirect($this->Auth->redirect());
             }else{
-                $this->Session->setFlash('Email or password is incorrect');
+                $this->Session->setFlash(__('Email or password is incorrect'), 'default', array('class'=>'flash-error'));
             }
         }
     }
@@ -80,10 +80,10 @@ class UsersController extends AppController {
        
             $this->User->create();
             if ($this->User->save($this->request->data)) {
-                $this->Session->setFlash('Registration complete');
+                $this->Session->setFlash(__('Registration Complete'), 'default', array('class'=>'flash-success'));
                 $this->redirect(array('action' => 'thankyou'));
             } else {
-                $this->Session->setFlash('Registration failed. Please try again.');
+                $this->Session->setFlash(__('Registration failed. Please try again.'), 'default', array('class'=>'flash-error'));
             }
         }
     }
@@ -113,22 +113,22 @@ class UsersController extends AppController {
         if ($this->request->is(array('post', 'put'))) {
             $this->User->id = $id;
     
-            // Handle file upload
+  
             if (!empty($this->request->data['User']['photo']['name'])) {
                 $file = $this->request->data['User']['photo'];
-                $ext = substr(strtolower(strrchr($file['name'], '.')), 1); //get the extension
-                $arr_ext = array('jpg', 'jpeg', 'gif', 'png'); //allowed extensions
+                $ext = substr(strtolower(strrchr($file['name'], '.')), 1); 
+                $arr_ext = array('jpg', 'jpeg', 'gif', 'png'); 
     
-                //only process if the extension is valid
+           
                 if (in_array($ext, $arr_ext)) {
-                    //do the actual uploading
+   
                     move_uploaded_file($file['tmp_name'], WWW_ROOT . 'img/uploads/' . $file['name']);
     
-                    //prepare the filename for database entry
+
                     $this->request->data['User']['photo'] = 'uploads/' . $file['name'];
                 }
             } else {
-                // Don't update the photo if it's not changed
+
                 unset($this->request->data['User']['photo']);
             }
     
@@ -136,7 +136,7 @@ class UsersController extends AppController {
                 $this->Session->setFlash(__('User has been updated'), 'default', array('class'=>'flash-success'));
                 return $this->redirect(array('action' => 'view', $id));
             }
-            $this->Session->setFlash(__('Unable to update user.'));
+                $this->Session->setFlash(__('Unable to update user'), 'default', array('class'=>'flash-error'));
         }
     
         if (!$this->request->data) {
@@ -148,7 +148,7 @@ class UsersController extends AppController {
 
     function delete($id = NULL){
         $this->User->delete($id);
-        $this->Session->setFlash('User has been deleted');
+        $this->Session->setFlash(__('User has been deleted'), 'default', array('class'=>'flash-success'));
         $this->redirect(array('action'=>'index'));
     }
 
@@ -161,10 +161,10 @@ class UsersController extends AppController {
             $this->User->id = $this->Auth->user('id'); 
 
             if ($this->User->save($this->request->data)) {
-                $this->Session->setFlash(__('Your email has been updated.'));
+                $this->Session->setFlash(__('Your email has been updated'), 'default', array('class'=>'flash-success'));
                 $this->redirect(array('action' => 'view', $this->User->id));
             } else {
-                $this->Session->setFlash(__('Unable to update your email. Please try again.'));
+                $this->Session->setFlash(__('Unable to update your email. Please try again.'), 'default', array('class'=>'flash-error'));
             }
         }
         $this->request->data = $this->User->findById($this->Auth->user('id'));
@@ -185,19 +185,19 @@ class UsersController extends AppController {
                         $this->User->id = $user['User']['id'];
                         
                         if ($this->User->saveField('password', $this->request->data['User']['new_password'])) {
-                            $this->Session->setFlash('Password Changed Successfully');
+                            $this->Session->setFlash(__('Password Changed Successfully'), 'default', array('class'=>'flash-success'));
                             $this->redirect(array('action' => 'index'));
                         } else {
-                            $this->Session->setFlash('Failed to change password');
+                            $this->Session->setFlash(__('Failed to change password'), 'default', array('class'=>'flash-error'));
                         }
                     } else {
                         $this->Session->setFlash('Validation error: ' . implode(', ', $this->User->validationErrors));
                     }
                 } else {
-                    $this->Session->setFlash('Old password is incorrect');
+                    $this->Session->setFlash(__('Old password is incorrect'), 'default', array('class'=>'flash-error'));
                 }
             } else {
-                $this->Session->setFlash('User not found');
+                $this->Session->setFlash(__('User not found'), 'default', array('class'=>'flash-error'));
             }
         }
     }

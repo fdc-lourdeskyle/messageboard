@@ -87,13 +87,14 @@ class ConversationsController extends AppController{
                 );
 
                 if($this->Message->save($messageData)){
-                    $this->Session->setFlash('The message has been sent');
+                    $this->Session->setFlash(__('The Conversation has been sent'), 'default', array('class'=>'flash-success'));
                     return $this->redirect(array('action'=>'index'));
                 }else{
-                    $this->Session->setFlash('Message cannot be sent');
+                    $this->Session->setFlash(__('The Conversation cannot be sent'), 'default', array('class'=>'flash-error'));
+                    return $this->redirect(array('action'=>'index'));
                 }
             }else{
-                $this->Session->setFlash('Conversation cannot be created');
+                $this->Session->setFlash(__('Conversation cannot be created'), 'default', array('class'=>'flash-error'));
             }
          }
     }
@@ -168,9 +169,9 @@ class ConversationsController extends AppController{
             );
 
             if($this->Message->save($data)){
-                $this->Session->setFlash('The message has been sent');
+                $this->Session->setFlash(__('The message has been sent'), 'default', array('class'=>'flash-success'));
             }else{
-                $  $this->Session->setFlash('The message has not been sent');
+                $this->Session->setFlash(__('The message has not been sent'), 'default', array('class'=>'flash-error'));
             }
 
             return $this->redirect(array('action' => 'view', $conversationId));
@@ -187,9 +188,10 @@ class ConversationsController extends AppController{
         }
 
         if($this->Conversation->delete()){
+            $this->Session->setFlash(__('Conversation deleted'), 'default', array('class'=>'flash-success'));
             $response = array('status' =>'success', 'message' => 'Conversation deleted');
         }else{
-      
+            $this->Session->setFlash(__('Conversation cannot be deleted'), 'default', array('class'=>'flash-error'));
             $response = array('status' =>'error', 'message' => 'Conversation can not be deleted');
         }
 
@@ -215,10 +217,11 @@ class ConversationsController extends AppController{
             if($remainingMessages == 0){
                 $this->Conversation->delete($conversationId);
             }
+            $this->Session->setFlash(__('Message deleted'), 'default', array('class'=>'flash-success'));
             $response = array('status' =>'success', 'message' => 'Message deleted');
-           
         }else{
-            $response = array('status' =>'error', 'message' => 'Message can not be deleted');
+            $this->Session->setFlash(__('Message cannot be deleted'), 'default', array('class'=>'flash-error'));
+            $response = array('status' =>'error', 'message' => 'Message cannot be deleted');
         }
 
         echo json_encode($response);

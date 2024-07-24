@@ -1,2 +1,10 @@
-<h1>Thank You for Registering!</h1>
-<?php echo $this->Html->link('Back to Homepage', array('controller' => 'pages', 'action' => 'display'), array('class' => 'nav-button')); ?>
+<div id="con">
+    <div class="ty-container">
+    <h2>THANK YOU FOR REGISTERING!</h2>
+        <div class="action-button">
+        <a href="<?php echo $this->Html->url(array('controller' => 'pages', 'action' => 'display')); ?>">
+        <i class="fa-solid fa-home" style="color: #ee964b; font-size: 15px; margin-right: 10px;"></i> Back to Homepage
+        </a>
+        </div>
+    </div>
+</div>

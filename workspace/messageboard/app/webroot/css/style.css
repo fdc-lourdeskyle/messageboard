@@ -72,6 +72,20 @@ body{
     height: 50px;
 }
 
+.ty-container{
+    width: max-content;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    justify-content:center;
+    margin-top: 200px;
+    padding: 20px;
+}
+
 .action-container{
     width: max-content;
     margin-left: auto;
@@ -531,22 +545,28 @@ a:visited{
 }
 
 .flash-success{
-    background-color: green;
-    border: 1px solid darkgreen;
-    color: #e7ecef;
+    background-color: #9ef01a;
+    border: 1px solid #70e000;
+    color: black;
     padding: 10px;
     border-radius: 5px;
     font-size: 14px;
 }
 
 .flash-error{
-    background-color: red;
-    border: 1px solid darkred;
+    background-color: #FFD600;
+    border: 1px solid #FFD600;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
 }
 
 .flash-info{
     background-color: skyblue;
     border: 1px solid darkblue;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 14px;
 }
 
 .message-btns-container{

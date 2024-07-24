@@ -7,8 +7,13 @@
             <div class="msg">
                 <?php echo $this->Form->input('message', array('label' => false, 'placeholder' => 'Type your message here...', 'type' => 'textarea', 'class' => "msg-input")); ?>
             </div>
-            <?php echo $this->Form->submit('Send', array('class' => "form-button")); ?>
-            <?php echo $this->Form->end(); ?>
+            <div class="message-btns-container">
+                <?php echo $this->Form->submit('Send', array('class' => "form-button")); ?>
+                <?php echo $this->Form->end(); ?>
+                <div class="form-actions" style="margin-left: 10px;">
+                    <?php echo $this->Form->button('Back', array('type' => 'button', 'onclick' => "location.href='" . $this->Html->url(array('controller' => 'conversations', 'action' => 'index')) . "'", 'class' => 'form-button')); ?>
+                </div>
+            </div>
         </div>
     </div>
     <div class="convo-list" id="message-list">
@@ -49,8 +54,10 @@ $(document).ready(function() {
             }
         });
     });
+});
 
-    $('.delete-message').click(function(e){
+$(document).ready(function() {
+        $(document).on('click', '.delete-message', function(e) {
         e.preventDefault();
         var $this = $(this);
         var messageId = $this.data('id');
@@ -58,26 +65,25 @@ $(document).ready(function() {
         console.log(messageElement);
 
         $.ajax({
-            url:'/conversations/deleteMsg/' + messageId,
+            url: '/conversations/deleteMsg/' + messageId,
             type: 'POST',
             dataType: 'json',
             success: function(response) {
-                if(response.status === 'success'){
-                    messageElement.fadeOut(500, function(){
+                if (response.status === 'success') {
+                    messageElement.fadeOut(500, function() {
                         $(this).remove();
                     });
-                }else{
+                } else {
                     alert(response.message);
                 }
             },
-            error: function(xhr, status, error){
+            error: function(xhr, status, error) {
                 console.log('Error:', error);
-                console.log('Status', status);
+                console.log('Status:', status);
                 console.dir(xhr);
                 alert('Error deleting conversation');
             }
+            });
         });
     });
-
-});
 </script>

@@ -60,11 +60,10 @@
 			<?php endif; ?>
     </div>
 	</div>
+	<?php echo $this->Session->flash(); ?>
+
 	<div id="con">
-
-			<?php echo $this->Session->flash(); ?>
 			<?php echo $content_for_layout; ?> 
-
 	</div>
 
 </body>

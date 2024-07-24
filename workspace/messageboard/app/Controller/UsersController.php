@@ -47,7 +47,7 @@ class UsersController extends AppController {
 
     public function isAuthorized($user) {
       
-        if (in_array($this->action, array('view', 'edit', 'delete', 'change_email', 'change_password'))) {
+        if (in_array($this->action, array('view', 'edit', 'delete', 'change_email'))) {
           
             $userId = $this->request->params['pass'][0];
             if ($userId == $user['id']) {
@@ -133,7 +133,7 @@ class UsersController extends AppController {
             }
     
             if ($this->User->save($this->request->data)) {
-                $this->Session->setFlash(__('User has been updated.'));
+                $this->Session->setFlash(__('User has been updated'), 'default', array('class'=>'flash-success'));
                 return $this->redirect(array('action' => 'view', $id));
             }
             $this->Session->setFlash(__('Unable to update user.'));

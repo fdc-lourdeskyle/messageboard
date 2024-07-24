@@ -8,21 +8,21 @@ class ConversationsController extends AppController{
     public $helpers = array('Html', 'Form', 'Url');
     public $components = array('Paginator','RequestHandler');
     
-    public function isAuthorized($user) {
+    // public function isAuthorized($user) {
       
-        if (in_array($this->action, array('index','view', 'reply', 'delete', 'deleteMsg'))) {
+    //     if (in_array($this->action, array('index','view', 'reply', 'delete', 'deleteMsg'))) {
           
-            $userId = $this->request->params['pass'][0];
-            if ($userId == $user['id']) {
-                return true;
-            } else {
-                $this->Session->setFlash(__('You are not authorized to access that page.'));
-                $this->redirect(array('action' => 'index'));
-                return false;
-            }
-        }
-        return parent::isAuthorized($user);
-    }
+    //         $userId = $this->request->params['pass'][0];
+    //         if ($userId == $user['id']) {
+    //             return true;
+    //         } else {
+    //             $this->Session->setFlash(__('You are not authorized to access that page.'));
+    //             $this->redirect(array('action' => 'index'));
+    //             return false;
+    //         }
+    //     }
+    //     return parent::isAuthorized($user);
+    // }
 
 
     public function index() {
@@ -49,8 +49,9 @@ class ConversationsController extends AppController{
         );
     
         $conversations = $this->Paginator->paginate('Conversation');
+        $currentPageCount = count($conversations);
 
-        $this->set(compact('conversations','totalConversations'));
+        $this->set(compact('conversations','totalConversations','currentPageCount'));
     }
     
 
@@ -200,13 +201,23 @@ class ConversationsController extends AppController{
         $this->Message->id = $id;
 
         if(!$this->Message->exists()){
-            throw new NotFoundException(_('Invalid Message'));
+            throw new NotFoundException(__('Invalid Message'));
         }
 
+        $message = $this->Message->findById($id);
+        $conversationId = $message['Message']['conversation_id'];
+
         if($this->Message->delete()){
+            $remainingMessages = $this->Message->find('count', array(
+                'conditions' => array('Message.conversation_id' => $conversationId)
+            ));
+
+            if($remainingMessages == 0){
+                $this->Conversation->delete($conversationId);
+            }
             $response = array('status' =>'success', 'message' => 'Message deleted');
+           
         }else{
-      
             $response = array('status' =>'error', 'message' => 'Message can not be deleted');
         }
 

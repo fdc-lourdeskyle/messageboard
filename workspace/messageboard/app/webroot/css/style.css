@@ -124,6 +124,10 @@ input[type="textarea"]{
     width: 300px;
 }
 
+.error-message{
+    font-size: 12px;
+    color: ;
+}
 
 .action-button{
     background-color: #faf0ca;
@@ -562,9 +566,10 @@ a:visited{
 }
 
 .flash-error{
-    background-color: #FFD600;
-    border: 1px solid #FFD600;
+    background-color: #f02d3a;
+    border: 1px solid #a51c30;
     padding: 10px;
+    color: white;
     border-radius: 5px;
     font-size: 14px;
 }

@@ -83,7 +83,15 @@ class UsersController extends AppController {
                 $this->Session->setFlash(__('Registration Complete'), 'default', array('class'=>'flash-success'));
                 $this->redirect(array('action' => 'thankyou'));
             } else {
-                $this->Session->setFlash(__('Registration failed. Please try again.'), 'default', array('class'=>'flash-error'));
+                $errors = $this->User->validationErrors;
+
+                $errorMessage = 'Registration failed. Please fix the following errors:<br>';
+                foreach($errors as $field => $messages){
+                    foreach($messages as $message){
+                        $errorMessage .= $message . '<br>';
+                    }
+                }
+                $this->Session->setFlash(__($errorMessage), 'default', array('class'=>'flash-error'));
             }
         }
     }

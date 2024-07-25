@@ -39,6 +39,10 @@ class User extends Model {
                 'rule' => 'notBlank',
                 'message' => 'Please enter your name'
             ),
+            'name_length' => array(
+                'rule' => array('between', 5, 20),
+                'message' => 'Name must be between 5 and 20 characters'
+            )
         ),
         'email' => array(
             'valid_email' => array(
@@ -62,6 +66,10 @@ class User extends Model {
             'match_password' => array(
                 'rule' => 'matchPasswords',
                 'message' => "Passwords do not match"
+            ),
+            'password_length' => array(
+                'rule' => array('between', 5, 20),
+                'message' => 'Password must be 8 characters and up'
             )
         ),
         'password_confirmation' => array(

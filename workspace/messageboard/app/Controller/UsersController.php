@@ -126,7 +126,7 @@ class UsersController extends AppController {
             if (!empty($this->request->data['User']['photo']['name'])) {
                 $file = $this->request->data['User']['photo'];
                 $ext = substr(strtolower(strrchr($file['name'], '.')), 1); 
-                $arr_ext = array('jpg', 'jpeg', 'gif', 'png'); 
+                $arr_ext = array('jpg', 'gif', 'png'); 
     
            
                 if (in_array($ext, $arr_ext)) {

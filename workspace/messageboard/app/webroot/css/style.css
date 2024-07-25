@@ -124,11 +124,6 @@ input[type="textarea"]{
     width: 300px;
 }
 
-.error-message{
-    font-size: 12px;
-    color: ;
-}
-
 .action-button{
     background-color: #faf0ca;
     width: 200px;
@@ -371,7 +366,7 @@ a:visited{
 .ui-datepicker-trigger{
     width: 35px;
     position: absolute;
-    margin-top: 32px;
+    margin-top: 41px;
     right: 38%;
     border:none;
     background: none;

@@ -109,11 +109,7 @@ class UsersController extends AppController {
         $this->set('user', $user);
     }
 
-    public function edit($id = null){
-        if (!$id) {
-            throw new NotFoundException(__('Invalid user'));
-        }
-    
+    public function edit($id = null) {
         $user = $this->User->findById($id);
         if (!$user) {
             throw new NotFoundException(__('Invalid user'));
@@ -121,38 +117,48 @@ class UsersController extends AppController {
     
         if ($this->request->is(array('post', 'put'))) {
             $this->User->id = $id;
+            $file = $this->request->data['User']['photo'];
     
-  
-            if (!empty($this->request->data['User']['photo']['name'])) {
-                $file = $this->request->data['User']['photo'];
-                $ext = substr(strtolower(strrchr($file['name'], '.')), 1); 
-                $arr_ext = array('jpg', 'gif', 'png'); 
+            if (!empty($file['name'])) {
+                $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+                $allowedExtensions = array('jpg', 'gif', 'png');
     
-           
-                if (in_array($ext, $arr_ext)) {
-   
-                    move_uploaded_file($file['tmp_name'], WWW_ROOT . 'img/uploads/' . $file['name']);
+                if (in_array($ext, $allowedExtensions)) {
+                
+                    $uploadPath = WWW_ROOT . 'img/uploads/';
+                    if (!is_dir($uploadPath)) {
+                        mkdir($uploadPath, 0755, true);
+                    }
     
-
-                    $this->request->data['User']['photo'] = 'uploads/' . $file['name'];
+               
+                    if (move_uploaded_file($file['tmp_name'], $uploadPath . $file['name'])) {
+                        $this->request->data['User']['photo'] = 'uploads/' . $file['name'];
+                    } else {
+                        $this->Session->setFlash(__('Failed to upload file. Please try again.'), 'default', array('class' => 'flash-error'));
+                        return;
+                    }
+                } else {
+                    $this->Session->setFlash(__('Invalid file type. Only jpg, gif, and png files are allowed.'), 'default', array('class' => 'flash-error'));
+                    return;
                 }
             } else {
-
+          
                 unset($this->request->data['User']['photo']);
             }
     
             if ($this->User->save($this->request->data)) {
-                $this->Session->setFlash(__('User has been updated'), 'default', array('class'=>'flash-success'));
+                $this->Session->setFlash(__('User has been updated'), 'default', array('class' => 'flash-success'));
                 return $this->redirect(array('action' => 'view', $id));
+            } else {
+                $this->Session->setFlash(__('Unable to update user'), 'default', array('class' => 'flash-error'));
             }
-                $this->Session->setFlash(__('Unable to update user'), 'default', array('class'=>'flash-error'));
         }
     
         if (!$this->request->data) {
             $this->request->data = $user;
         }
-        $this->set('user',$user);
         
+        $this->set('user', $user);
     }
 
     function delete($id = NULL){

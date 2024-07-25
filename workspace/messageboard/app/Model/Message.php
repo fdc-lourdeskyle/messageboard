@@ -15,4 +15,14 @@ class Message extends AppModel {
 
     var $name= 'Message';
 
+
+    var $validate = array(
+        'message' => array(
+            'message_must_not_be_empty' => array(
+                'rule' => 'notBlank',
+                'message' => 'Message cannot be empty'
+            ),
+        ),
+    );
+
 }

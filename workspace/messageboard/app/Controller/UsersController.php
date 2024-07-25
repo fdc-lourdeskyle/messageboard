@@ -47,7 +47,7 @@ class UsersController extends AppController {
 
     public function isAuthorized($user) {
       
-        if (in_array($this->action, array('view', 'edit', 'delete', 'change_email'))) {
+        if (in_array($this->action, array('edit', 'delete', 'change_email'))) {
           
             $userId = $this->request->params['pass'][0];
             if ($userId == $user['id']) {
@@ -101,12 +101,18 @@ class UsersController extends AppController {
     }
 
     public function view($id = null) {
-        if (!$this->User->exists($id)) {
+
+        $this->User->id = $id;
+        $user = $this->User->read();
+
+        if (!$user) {
             throw new NotFoundException(__('Invalid user'));
         }
+
+        $currentUserId = $this->Auth->user('id');
         $user = $this->User->findById($id);
         $user['User']['age'] = $this->User->calculateAge($user['User']['birthdate']);
-        $this->set('user', $user);
+        $this->set(compact('user','currentUserId', 'id'));
     }
 
     public function edit($id = null) {

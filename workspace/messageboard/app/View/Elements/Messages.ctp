@@ -35,12 +35,14 @@
                         <?php 
                             $userPhoto = $message['Sender']['photo'];
                             $userPhotoUrl = !empty($userPhoto)? $this->Html->url('/img/'.$userPhoto) : null;
+                            $profileUrl = $this->Html->url(array('controller' => 'users', 'action' => 'view', $message['Sender']['id']));
                         ?>
-                        <img id="photoPreview" src="<?php echo $userPhotoUrl; ?>" alt="Sender photo" style="<?php echo $userPhotoUrl ? '' : 'display:none;'; ?> max-width: 50px; max-height: 50px;" />
+                        <a href="<?php echo $profileUrl; ?>"><img id="photoPreview" src="<?php echo $userPhotoUrl; ?>" alt="Sender photo" style="<?php echo $userPhotoUrl ? '' : 'display:none;'; ?> max-width: 50px; max-height: 50px;" /> </a>
                     </div>
                     <div class="msg-content">
                         <div class="msg">
-                            <p class="message-text"><?php echo h($message['Message']['message']); ?></p>
+                                <p class="message-text"><?php echo h($message['Message']['message']); ?></p>
+                            
                             <span class="show-more-msg">Show More</span>
                             <span class="show-less" style="display:none;">Show Less</span>
                         </div>

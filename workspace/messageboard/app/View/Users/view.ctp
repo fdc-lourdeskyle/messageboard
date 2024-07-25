@@ -2,7 +2,7 @@
 
     <div class="profile-container"> 
         <div class="users-header">
-            <h1>My Profile</h1> 
+            <h1>User Profile</h1> 
         </div>
         <div class="profile-upper-content">
                 <div class="profile-img">
@@ -25,6 +25,7 @@
             <p class="prof-details-desc"><?php echo $user['User']['hobby']; ?></p>
         </div>
 
+        <?php if($id === $currentUserId): ?>
         <div class="users-header">
                 <h1>Account Settings</h1> 
         </div>
@@ -48,5 +49,16 @@
                 Back </a>
             </div>
         </div>
+        <?php else: ?>
+        <div class="users-header">
+                <h1>Account Settings</h1> 
+        </div>
+        <div class="user-action-container">
+            <div class="user-action-button">
+                <a href="<?php echo $this->Html->url(array('controller' => 'conversations', 'action' => 'index')); ?>">
+                Back </a>
+            </div>
+        </div>
+        <?php endif; ?>
 
     </div>

@@ -109,9 +109,9 @@ class User extends Model {
             $this->data[$this->alias]['created_at']=date('Y-m-d H:i:s');
         }
 
-        if(empty($this->data[$this->alias]['photo'])){
-            $this->data[$this->alias]['photo'] = 'uploads/default.jpg';
-        }
+        // if(empty($this->data[$this->alias]['photo'])){
+        //     $this->data[$this->alias]['photo'] = 'uploads/default.jpg';
+        // }
             return true;
     }
 

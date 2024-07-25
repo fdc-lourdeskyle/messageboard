@@ -13,7 +13,7 @@
             </div>
             <div class="profile-details">
                 <div class="edit-input-container" style="width:180px;">
-                    <label for="name" class="form__label">Name</label>
+                    <label for="name" class="form__label">Name:</label>
                     <?php echo $this->Form->input('name', array('label' => false, 'class' => 'edit-input')); ?>
                 </div>
                 <div class="edit-input-container" style="width:180px;">
@@ -25,11 +25,11 @@
                     echo $this->Form->input('gender', array('type' => 'radio','label' => false,'options' => $genderOptions));
                 ?>
                 </div>
-                <div class="edit-input-container" style="margin-bottom:20px;">
-                    <label for="name" class="form__label" style="margin: bottom 20px;">Birthdate</label>
+                <div class="edit-input-container" style="">
+                    <label for="birthdate" class="form__label" style="margin: bottom 20px;">Birthdate (M-D-Y) :</label>
                     <?php  echo $this->Form->input('birthdate', array('id' => 'birthdate', 'label' => false, 'type' => 'text','class' => 'form__input datepicker', 'div' => false)); ?>
                 </div>
-                <div class="edit-input-container" style="margin-top:10px;">
+                <div class="edit-input-container" style="">
                     <label for="photo" class="custom-file-upload">Upload Profile Picture<?php echo $this->Form->file('photo', array('label' => 'Upload New Photo', 'id' => 'photo')); ?></label>
                 </div>
             </div>
@@ -37,7 +37,7 @@
         <div class="profile-lower-content">
 
             <div class="edit-input-container">
-                    <label for="hobby" class="form__label" style="margin-bottom: 10px;">Hobby</label>
+                    <label for="hobby" class="form__label" style="margin-bottom: 10px;">Hobby:</label>
                     <?php echo $this->Form->input('hobby', array('label' => false, 'type' => 'textarea', 'class' => 'text-edit-input')); ?>
             </div>
 

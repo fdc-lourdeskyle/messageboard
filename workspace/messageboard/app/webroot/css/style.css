@@ -117,7 +117,7 @@ body{
 }
 
 .text-edit-input{
-    width: 300px;
+    width: 500px;
 }
 
 input[type="textarea"]{
@@ -140,13 +140,13 @@ input[type="textarea"]{
 }
 
 .custom-file-upload{
-    margin-top: 10px;
     border-radius: 8px;
     border: #000000 solid 1px;
     background-color: white;
-    width: 300px;
+    width: 160px;
     padding: 10px;
     font-size: 14px;
+    text-align: center;
     cursor: pointer;
 }
 
@@ -352,24 +352,29 @@ a:visited{
 
 
 .form__label{
+    margin-bottom:10px;
+}
+.form__input{
+    width: 155px;
     margin-bottom:20px;
 }
 
 .edit-input-container{
-    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
 }
 
 .ui-datepicker-trigger{
     width: 35px;
     position: absolute;
-    margin-top: 4px;
-    right: 34.8%;
+    margin-top: 32px;
+    right: 38%;
     border:none;
     background: none;
 }
 
 .ui-datepicker{
-    width: 200px;
+    width: 100px;
     position:relative;
 }
 

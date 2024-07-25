@@ -51,7 +51,7 @@
 		<div id="navbar">
 			<?php if ($this->Session->read('Auth.User')): ?>
 				<span class="user-name">
-                	<?php echo ($this->Session->read('Auth.User.name')); ?>
+					<?php echo $this->Html->link($this->Session->read('Auth.User.name'), array('controller' => 'users', 'action' => 'view', $this->Session->read('Auth.User.id')), array('class' => 'nav-button')); ?>
 				</span>
 				<?php echo $this->Html->link('LOGOUT', array('controller' => 'users', 'action' => 'logout'), array('class' => 'nav-button')); ?>
 			<?php else: ?>

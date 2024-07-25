@@ -58,7 +58,7 @@
 				<?php echo $this->Html->link('LOGIN', array('controller' => 'users', 'action' => 'login'), array('class' => 'nav-button')); ?>
 				<?php echo $this->Html->link('REGISTER', array('controller' => 'users', 'action' => 'register'), array('class' => 'nav-button')); ?>
 			<?php endif; ?>
-    </div>
+   		 </div>
 	</div>
 	<?php echo $this->Session->flash(); ?>
 

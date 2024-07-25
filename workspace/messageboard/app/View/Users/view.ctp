@@ -16,8 +16,8 @@
                         <p class="prof-details-name"><?php echo $user['User']['name']; ?></p>
                         <p class="prof-details"> Gender: <?php echo $user['User']['gender']; ?></p>
                         <p class="prof-details"> Birthdate: <?php echo $user['User']['birthdate']; ?></p>
-                        <p class="prof-details"> Joined: <?php echo $user['User']['last_time_login']; ?></p>
-                        <p class="prof-details"> Last Login: <?php echo $user['User']['last_time_login']; ?></p>
+                        <p class="prof-details"> Joined: <?php echo $user['User']['created_at']; ?></p>
+                        <p class="prof-details"> Last Login: <?php echo $user['User']['last_login_time']; ?></p>
                 </div>
         </div>
         <div class="profile-lower-content">

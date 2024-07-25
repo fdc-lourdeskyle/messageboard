@@ -96,6 +96,10 @@ class User extends Model {
         if (isset($this->data[$this->alias]['password'])) {
             $this->data[$this->alias]['password'] = AuthComponent::password($this->data[$this->alias]['password']);
         }
+
+        if(empty($this->data[$this->alias]['id'])){
+            $this->data[$this->alias]['created_at']=date('Y-m-d H:i:s');
+        }
         return true;
     }
 

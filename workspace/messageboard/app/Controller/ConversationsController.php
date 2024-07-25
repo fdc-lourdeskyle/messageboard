@@ -174,7 +174,7 @@ class ConversationsController extends AppController{
                 $this->Session->setFlash(__('The message has not been sent'), 'default', array('class'=>'flash-error'));
             }
 
-            return $this->redirect(array('action' => 'view', $conversationId));
+            return $this->redirect(array('action' => 'index'));
         }
         throw new MethodNotAllowedException();
     }

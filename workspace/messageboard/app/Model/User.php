@@ -100,14 +100,18 @@ class User extends Model {
         if(empty($this->data[$this->alias]['id'])){
             $this->data[$this->alias]['created_at']=date('Y-m-d H:i:s');
         }
-        return true;
+
+        if(empty($this->data[$this->alias]['photo'])){
+            $this->data[$this->alias]['photo'] = 'uploads/default.jpg';
+        }
+            return true;
     }
 
-    public function calculateAge($birthdate){
-        $birthdate = new DateTime ($birthdate);
-        $currentDate = new DateTime();
-        $age = $currentDate->diff($birthdate)->y;
-        return $age;
+        public function calculateAge($birthdate){
+            $birthdate = new DateTime ($birthdate);
+            $currentDate = new DateTime();
+            $age = $currentDate->diff($birthdate)->y;
+            return $age;
     }
 
 }

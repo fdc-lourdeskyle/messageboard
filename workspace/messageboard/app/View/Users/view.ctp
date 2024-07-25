@@ -16,8 +16,8 @@
                         <p class="prof-details-name"><?php echo $user['User']['name']; ?> , <?php echo $user['User']['age']; ?></p>
                         <p class="prof-details"> Gender: <?php echo $user['User']['gender']; ?></p>
                         <p class="prof-details"> Birthdate: <?php echo $user['User']['birthdate']; ?></p>
-                        <p class="prof-details"> Joined: <?php echo $user['User']['created_at']; ?></p>
-                        <p class="prof-details"> Last Login: <?php echo $user['User']['last_login_time']; ?></p>
+                        <p class="prof-details"> Joined: <?php echo $this->Time->format('F j, Y - gA', $user['User']['created_at']); ?></p>
+                        <p class="prof-details"> Last Login: <?php echo $this->Time->format('F j, Y - gA', $user['User']['last_login_time']); ?></p>
                 </div>
         </div>
         <div class="profile-lower-content">

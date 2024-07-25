@@ -33,6 +33,7 @@ App::uses('Controller', 'Controller');
 class AppController extends Controller {
 
     public $layout = 'default';
+    public $helpers = array('Time');
 
     public $components= array(
         'Session',

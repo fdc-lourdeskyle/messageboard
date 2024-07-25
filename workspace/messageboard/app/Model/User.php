@@ -103,4 +103,11 @@ class User extends Model {
         return true;
     }
 
+    public function calculateAge($birthdate){
+        $birthdate = new DateTime ($birthdate);
+        $currentDate = new DateTime();
+        $age = $currentDate->diff($birthdate)->y;
+        return $age;
+    }
+
 }

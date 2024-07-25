@@ -13,7 +13,7 @@
                         <img id="photoPreview" src="<?php echo $userPhotoUrl; ?>" alt="User Photo" style="<?php echo $userPhotoUrl ? '' : 'display:none;'; ?>" />
                 </div>
                 <div class="profile-details">
-                        <p class="prof-details-name"><?php echo $user['User']['name']; ?></p>
+                        <p class="prof-details-name"><?php echo $user['User']['name']; ?> , <?php echo $user['User']['age']; ?></p>
                         <p class="prof-details"> Gender: <?php echo $user['User']['gender']; ?></p>
                         <p class="prof-details"> Birthdate: <?php echo $user['User']['birthdate']; ?></p>
                         <p class="prof-details"> Joined: <?php echo $user['User']['created_at']; ?></p>

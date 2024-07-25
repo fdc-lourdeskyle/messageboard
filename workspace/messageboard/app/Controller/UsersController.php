@@ -97,6 +97,7 @@ class UsersController extends AppController {
             throw new NotFoundException(__('Invalid user'));
         }
         $user = $this->User->findById($id);
+        $user['User']['age'] = $this->User->calculateAge($user['User']['birthdate']);
         $this->set('user', $user);
     }
 

@@ -32,8 +32,8 @@
             <h4>Your Messages</h4>
         </div> -->
         <div style="margin-bottom:10px;">
-            <!-- <?php echo $this->Form->button('Back', array('type' => 'button', 'onclick' => "location.href='" . $this->Html->url(array('controller' => 'users', 'action' => 'index')) . "'", 'class' => 'form-button')); ?> -->
-            <?php echo $this->Form->button('Back', array('type' => 'button', 'onclick' => "window.history.back();", 'class' => 'form-button')); ?>
+            <?php echo $this->Form->button('Home', array('type' => 'button', 'onclick' => "location.href='" . $this->Html->url(array('controller' => 'users', 'action' => 'index')) . "'", 'class' => 'form-button')); ?>
+            <?php echo $this->Form->button('Inbox', array('type' => 'button', 'onclick' => "location.href='" . $this->Html->url(array('controller' => 'conversations', 'action' => 'index')) . "'", 'class' => 'form-button')); ?>
             <?php echo $this->Html->link('New Message', array('controller' => 'conversations', 'action' => 'add'),array('class' => 'new-message-button')); ?>
         </div>
     </div>

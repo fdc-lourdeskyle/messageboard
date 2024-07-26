@@ -20,12 +20,6 @@
         </div>
 </div>
 
-
-
-
-
-
-
 <script type="text/javascript">
     $(document).ready(function() {
         $('#receiver_id').select2({

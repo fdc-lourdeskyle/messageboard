@@ -28,16 +28,12 @@
 </style>
 <div class="convo-container">
     <div class="convo-header">
-        <!-- <div class="msg-header">
-            <h4>Your Messages</h4>
-        </div> -->
         <div style="margin-bottom:10px;">
-            <!-- <?php echo $this->Form->button('Back', array('type' => 'button', 'onclick' => "location.href='" . $this->Html->url(array('controller' => 'users', 'action' => 'index')) . "'", 'class' => 'form-button')); ?> -->
             <?php echo $this->Form->button('Back', array('type' => 'button', 'onclick' => "window.history.back();", 'class' => 'form-button')); ?>
-            <?php echo $this->Html->link('New Message', array('controller' => 'conversations', 'action' => 'add'),array('class' => 'new-message-button')); ?>
+            <?php echo $this->Html->link('New Message', array('controller' => 'conversations', 'action' => 'add'), array('class' => 'new-message-button')); ?>
         </div>
     </div>
-    <div class="convo-list" id="messages-container">
+    <div class="convo-list" id="conversations">
         <?php if (!empty($conversations)): ?>
             <?php foreach ($conversations as $conversation): ?>
                 <div class="convo" id="conversation-<?php echo $conversation['Conversation']['id']; ?>">
@@ -46,7 +42,7 @@
                             <?php
                             $senderPhoto = !empty($conversation['Sender']['photo']) ? $this->Html->url('/img/' . $conversation['Sender']['photo']) : null;
                             ?>
-                            <img id="photoPreview" src="<?php echo $senderPhoto; ?>" alt="Sender photo" style="<?php echo $senderPhoto ? '' : 'display:none;'; ?> max-width: 100px; max-height: 100px;" />
+                            <img src="<?php echo $senderPhoto; ?>" alt="Sender photo" style="<?php echo $senderPhoto ? '' : 'display:none;'; ?> max-width: 100px; max-height: 100px;" />
                         </div>
                         <div class="msg-content">
                             <?php if (!empty($conversation['Message'])): ?>
@@ -69,32 +65,49 @@
                         </div>
                     </div>
                     <div class="msg-action-btns">
-                        <?php echo $this->Html->link('Open', array('action'=>'view', $conversation['Conversation']['id'])); ?>
-                        <?php echo $this->Html->link('Delete ', array('action'=>'delete', $conversation['Conversation']['id']), array('class'=>'delete-conversation','data-id'=>$conversation['Conversation']['id'], 'escape'=>false, 'onclick'=>'return false;')); ?>
-                    </div> 
+                        <?php echo $this->Html->link('Open', array('action' => 'view', $conversation['Conversation']['id'])); ?>
+                        <?php echo $this->Html->link('Delete', array('action' => 'delete', $conversation['Conversation']['id']), array('class' => 'delete-conversation', 'data-id' => $conversation['Conversation']['id'], 'escape' => false, 'onclick' => 'return false;')); ?>
+                    </div>
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
             <p>No conversations found.</p>
         <?php endif; ?>
     </div>
-    <?php if ($currentPageCount >= 10): ?> 
-        <div class="paging form-button">
-            <?php
-                echo $this->Paginator->next(('Show More'), array(), null, array('class' => 'enabled'));
-            ?>
-        </div>
-    <?php else: ?>
-        <div class="paging" style="display: none;">
-            <?php
-                echo $this->Paginator->next(('Show More'), array(), null, array('class' => 'hidden'));
-            ?>
-        </div>
+    <?php if (count($conversations) >= 10): ?>
+     <button id="load-more" data-page="<?php echo $this->request->params['paging']['Conversation']['page'] + 1; ?>">Load More</button>
     <?php endif; ?>
 </div>
 
-
 <script>
+    $(document).on('click', '#load-more', function() {
+        var button = $(this);
+        var page = button.data('page');
+        var url = '<?php echo $this->Html->url(array('action' => 'index')); ?>';
+
+        $.ajax({
+            url: url,
+            data: { page: page },
+            type: 'GET',
+            dataType: 'html',
+            success: function(response) {
+                var newContent = $(response).find('.conversation');
+                var loadMoreButton = $(response).find('#load-more');
+
+                if (newContent.length > 0) {
+                    $('.conversation-list').append(newContent);
+                    if (loadMoreButton.length > 0) {
+                        $('#load-more').replaceWith(loadMoreButton);
+                    } else {
+                        $('#load-more').remove();
+                    }
+                } else {
+                    $('#load-more').remove();
+                }
+            }
+        });
+    });
+
         $(document).ready(function(){
             $('.delete-conversation').click(function(e){
 

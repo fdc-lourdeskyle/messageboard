@@ -27,31 +27,36 @@ class ConversationsController extends AppController{
 
     public function index() {
         $userId = $this->Auth->user('id');
-
-        $totalConversations = $this->Conversation->find('count');
-        
-        $this->Paginator->settings = array(
-            'Conversation' => array(
-                'conditions' => array(
-                    'OR' => array(
-                        'Conversation.sender_id' => $userId,
-                        'Conversation.receiver_id' => $userId
-                    )
-                ),
-                'order' => array('Conversation.created_at DESC'),
-                'contain' => array(
-                    'Message' => array(
-                        'order' => array('Message.created_at DESC')
-                    )
-                ),
-                'limit' => 10, 
-            )
+    
+        // Set pagination parameters
+        $this->paginate = array(
+            'conditions' => array(
+                'OR' => array(
+                    'Conversation.sender_id' => $userId,
+                    'Conversation.receiver_id' => $userId
+                )
+            ),
+            'order' => array('Conversation.created_at DESC'),
+            'contain' => array(
+                'Message' => array(
+                    'order' => array('Message.created_at DESC')
+                )
+            ),
+            'limit' => 10 // Set the limit per page
         );
     
-        $conversations = $this->Paginator->paginate('Conversation');
-        $currentPageCount = count($conversations);
-
-        $this->set(compact('conversations','totalConversations','currentPageCount'));
+        // Paginate data
+        $conversations = $this->paginate('Conversation');
+    
+        // Check if the request is an AJAX request
+        if ($this->request->is('ajax')) {
+            $this->layout = 'ajax'; // Use the ajax layout
+            $this->set('conversations', $conversations);
+            $this->render('/Elements/conversations'); // Render the partial view
+        } else {
+            // Normal page load
+            $this->set(compact('conversations'));
+        }
     }
     
 

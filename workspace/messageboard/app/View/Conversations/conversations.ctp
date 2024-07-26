@@ -1,5 +1,5 @@
-<?php if (!empty($conversations)): ?>
-    <?php foreach ($conversations as $conversation): ?>
+<?php if (!empty($conversation)): ?>
+    <?php foreach ($conversation as $conversation): ?>
         <div class="convo">
             <div class="convo-content">
                 <div class="msg-img">
@@ -35,4 +35,9 @@
     <p>No conversations found.</p>
 <?php endif; ?>
 
-<input type="hidden" id="has-more-conversations" value="<?php echo $hasMoreConversations ? 'true' : 'false'; ?>" />
+<?php if ($hasMoreConversations): ?>
+        <div id="show-more-container">
+            <a href="#" id="show-more" data-page="2">Show More</a>
+        </div>
+    <?php endif; ?>
+

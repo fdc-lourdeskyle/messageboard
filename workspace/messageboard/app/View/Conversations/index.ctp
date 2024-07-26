@@ -77,7 +77,7 @@
     </div>
     <?php if (count($conversations) >= 10): ?>
         <button id="load-more" data-page="<?php echo $this->request->params['paging']['Conversation']['page'] + 1; ?>">Show More</button>
-        <?php endif; ?>
+    <?php endif; ?>
 </div>
 
 <script>

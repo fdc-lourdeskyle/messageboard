@@ -66,9 +66,8 @@
         <?php else: ?>
             <p>No conversations found.</p>
         <?php endif; ?>
-
-        <?php if (count($conversations) >= 10): ?>
-     <button id="load-more" data-page="<?php echo $this->request->params['paging']['Conversation']['page'] + 1; ?>">Load More</button>
-    <?php endif; ?>
 </div>
+<?php if (count($conversations) >= 10): ?>
+     <button id="load-more" data-page="<?php echo $this->request->params['paging']['Conversation']['page'] + 1; ?>">Load More</button>
+<?php endif; ?>
 

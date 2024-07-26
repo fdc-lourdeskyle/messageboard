@@ -3,7 +3,7 @@
         <div>
         </div>
         <div class="reply-form">
-            <?php echo $this->Form->create('Message', array('url' => array('controller' => 'conversations', 'action' => 'reply', $conversation['Conversation']['id']))); ?>
+            <?php echo $this->Form->create('Message', array('url' => array('controller' => 'conversations', 'action' => 'reply', $conversation['Conversation']['id']), 'id' => 'MessageReplyForm')); ?>
             <div class="msg">
                 <?php echo $this->Form->input('message', array('label' => false, 'placeholder' => 'Type your message here...', 'type' => 'textarea', 'class' => "msg-input")); ?>
             </div>
@@ -37,8 +37,10 @@ $(document).ready(function() {
             dataType: 'html',
             success: function(response) {
                 console.log(response);
-                var newMessages = $(response).find('#message-list').html();
-                
+                var $response = $('<div>').html(response);
+                var $messageList = $response.find('#message-list');
+                var newMessages = $messageList.html();
+                console.log('New content:', newMessages);
                 $('#message-list').append(newMessages);
 
                 var hasMoreMessages = $(response).find('#has-more-messages').val() === 'true';
@@ -56,7 +58,7 @@ $(document).ready(function() {
     });
 });
 
-$(document).ready(function() {
+    $(document).ready(function() {
         $(document).on('click', '.delete-message', function(e) {
         e.preventDefault();
         var $this = $(this);
@@ -82,6 +84,36 @@ $(document).ready(function() {
                 console.log('Status:', status);
                 console.dir(xhr);
                 alert('Error deleting conversation');
+            }
+            });
+        });
+    });
+
+    $(document).ready(function(){
+        $('#MessageReplyForm').on('submit', function(event){
+            event.preventDefault();
+
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(response){
+                    if (response.response) {
+                    response = response.response;
+                    }
+                    if (response.status === 'success') {
+                        alert(response.message);
+                        // window.location.href = '/conversations/index';
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                    error: function(xhr, status, error) {
+                    console.error('Status:', status);
+                    console.error('Error:', error);
+                    console.error('Response:', xhr.responseText);
+                    alert('An error occurred while sending the Message.');
             }
             });
         });

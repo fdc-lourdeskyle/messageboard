@@ -8,21 +8,14 @@ class ConversationsController extends AppController{
     public $helpers = array('Html', 'Form', 'Url');
     public $components = array('Paginator','RequestHandler');
     
-    // public function isAuthorized($user) {
-      
-    //     if (in_array($this->action, array('index','view', 'reply', 'delete', 'deleteMsg'))) {
-          
-    //         $userId = $this->request->params['pass'][0];
-    //         if ($userId == $user['id']) {
-    //             return true;
-    //         } else {
-    //             $this->Session->setFlash(__('You are not authorized to access that page.'));
-    //             $this->redirect(array('action' => 'index'));
-    //             return false;
-    //         }
-    //     }
-    //     return parent::isAuthorized($user);
-    // }
+    public function beforeFilter() {
+        parent::beforeFilter();
+        if ($this->request->is('ajax')) {
+            $this->response->type('json');
+            $this->viewClass = 'Json';
+        }
+    }
+    
 
 
     public function index() {
@@ -58,28 +51,24 @@ class ConversationsController extends AppController{
     }
     
 
-    public function add(){
-        if($this->request->is('post')){
-
-            // debug($this->request->data);
-
+    public function add() {
+        if ($this->request->is('post')) {
             $this->Conversation->create();
-
+    
             $senderId = $this->Auth->user('id');
             $receiverId = $this->request->data['Conversation']['receiver_id'];
             $messageText = $this->request->data['Message']['message'];
-
+    
             $conversationData = array(
                 'Conversation' => array(
                     'sender_id' => $senderId,
                     'receiver_id' => $receiverId
                 )
             );
-            
-            if($this->Conversation->save($conversationData)){
-
+    
+            if ($this->Conversation->save($conversationData)) {
                 $conversationId = $this->Conversation->id;
-
+    
                 $this->Message->create();
                 $messageData = array(
                     'Message' => array(
@@ -88,19 +77,45 @@ class ConversationsController extends AppController{
                         'message' => $messageText
                     )
                 );
-
-                if($this->Message->save($messageData)){
-                    $this->Session->setFlash(__('The Conversation has been sent'), 'default', array('class'=>'flash-success'));
-                    return $this->redirect(array('action'=>'index'));
-                }else{
-                    $this->Session->setFlash(__('The Conversation cannot be sent'), 'default', array('class'=>'flash-error'));
-                    return $this->redirect(array('action'=>'index'));
+    
+                if ($this->Message->save($messageData)) {
+                    if ($this->request->is('ajax')) {
+                        $response = array('status' => 'success', 'message' => 'The Conversation has been sent');
+                        $this->set(array(
+                            'response' => $response,
+                            '_serialize' => array('response')
+                        ));
+                    } else {
+                        $this->Session->setFlash(__('The Conversation has been sent'), 'default', array('class' => 'flash-success'));
+                        return $this->redirect(array('action' => 'index'));
+                    }
+                } else {
+                    if ($this->request->is('ajax')) {
+                        $response = array('status' => 'error', 'message' => 'The Conversation cannot be sent');
+                        $this->set(array(
+                            'response' => $response,
+                            '_serialize' => array('response')
+                        ));
+                    } else {
+                        $this->Session->setFlash(__('The Conversation cannot be sent'), 'default', array('class' => 'flash-error'));
+                        return $this->redirect(array('action' => 'index'));
+                    }
                 }
-            }else{
-                $this->Session->setFlash(__('Conversation cannot be created'), 'default', array('class'=>'flash-error'));
+            } else {
+                if ($this->request->is('ajax')) {
+                    $response = array('status' => 'error', 'message' => 'Conversation cannot be created');
+                    $this->set(array(
+                        'response' => $response,
+                        '_serialize' => array('response')
+                    ));
+                } else {
+                    $this->Session->setFlash(__('Conversation cannot be created'), 'default', array('class' => 'flash-error'));
+                }
             }
-         }
+        }
     }
+    
+    
 
     public function view($id = null) {
         if (!$id) {
@@ -145,39 +160,49 @@ class ConversationsController extends AppController{
     
         if ($this->request->is('ajax')) {
             $this->set(compact('messages', 'hasMoreMessages'));
-          
-                $view = new View($this, false);
-                $view->set('messages', $messages);
-                $view->set('hasMoreMessages', $hasMoreMessages);
-                $html = $view->render('messages');
-
-                $this->response->body($html);
-                $this->response->type('html');
+            $this->render('/Conversations/messages');
+            $this->response->type('html');
         } else {
             $this->set(compact('conversation', 'messages', 'id', 'hasMoreMessages'));
         }
 
     }
-    
 
-    public function reply($conversationId){
-
-        if($this->request->is('post')){
+    public function reply($conversationId) {
+        if ($this->request->is('post')) {
             $this->Message->create();
-
+    
             $data = array(
                 'conversation_id' => $conversationId,
                 'sender_id' => $this->Auth->user('id'),
                 'message' => $this->request->data['Message']['message']
             );
-
-            if($this->Message->save($data)){
-                $this->Session->setFlash(__('The message has been sent'), 'default', array('class'=>'flash-success'));
-            }else{
-                $this->Session->setFlash(__('The message has not been sent'), 'default', array('class'=>'flash-error'));
+    
+            if ($this->Message->save($data)) {
+                if ($this->request->is('ajax')) {
+                    $response = array('status' => 'success', 'message' => 'The message has been sent');
+                    $this->set(array(
+                        'response' => $response,
+                        '_serialize' => array('response')
+                    ));
+                    return;
+                } else {
+                    $this->Session->setFlash(__('The message has been sent'), 'default', array('class' => 'flash-success'));
+                    return $this->redirect(array('action' => 'index'));
+                }
+            } else {
+                if ($this->request->is('ajax')) {
+                    $response = array('status' => 'error', 'message' => 'The message has not been sent');
+                    $this->set(array(
+                        'response' => $response,
+                        '_serialize' => array('response')
+                    ));
+                    return;
+                } else {
+                    $this->Session->setFlash(__('The message has not been sent'), 'default', array('class' => 'flash-error'));
+                    return $this->redirect(array('action' => 'index'));
+                }
             }
-
-            return $this->redirect(array('action' => 'index'));
         }
         throw new MethodNotAllowedException();
     }

@@ -4,7 +4,7 @@
                     <h4>NEW MESSAGE</h4>
                 </div>
                 <div class="msg-receiver-input">
-                    <?php echo $this->Form->create('Conversation', array('url' => array('action' => 'add'))); ?>
+                    <?php echo $this->Form->create('Conversation', array('url' => array('action' => 'add'), 'id' => 'ConversationAddForm')); ?>
                     <?php echo $this->Form->input('receiver_id', array('id'=>'receiver_id', 'label'=>false, 'type' => 'select', 'class' => "form-input")); ?>
                 </div>
         </div>
@@ -55,7 +55,36 @@
                 return data.text;
             }
             })
+    });
+
+    $(document).ready(function() {
+         $('#ConversationAddForm').on('submit', function(event) {
+            event.preventDefault();
+
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: $(this).serialize(),
+                dataType: 'json',
+                success: function(response) {
+                if (response.response) {
+                    response = response.response;
+                }
+                if (response.status === 'success') {
+                    alert(response.message);
+                    window.location.href = '/conversations/index';
+                } else {
+                    alert(response.message);
+                }
+            },
+                error: function(xhr, status, error) {
+                console.error('Status:', status);
+                console.error('Error:', error);
+                console.error('Response:', xhr.responseText);
+                alert('An error occurred while sending the conversation.');
+            }
+            });
         });
-</script>
+    });
 
 </script>

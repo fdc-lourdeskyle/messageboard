@@ -36,7 +36,7 @@ $(document).ready(function() {
             data: { page: page },
             dataType: 'html',
             success: function(response) {
-
+                console.log(response);
                 var newMessages = $(response).find('#message-list').html();
                 
                 $('#message-list').append(newMessages);

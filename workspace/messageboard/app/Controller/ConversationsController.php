@@ -27,31 +27,34 @@ class ConversationsController extends AppController{
 
     public function index() {
         $userId = $this->Auth->user('id');
-
-        $totalConversations = $this->Conversation->find('count');
-        
-        $this->Paginator->settings = array(
-            'Conversation' => array(
-                'conditions' => array(
-                    'OR' => array(
-                        'Conversation.sender_id' => $userId,
-                        'Conversation.receiver_id' => $userId
-                    )
-                ),
-                'order' => array('Conversation.created_at DESC'),
-                'contain' => array(
-                    'Message' => array(
-                        'order' => array('Message.created_at DESC')
-                    )
-                ),
-                'limit' => 10, 
-            )
+    
+        $this->paginate = array(
+            'conditions' => array(
+                'OR' => array(
+                    'Conversation.sender_id' => $userId,
+                    'Conversation.receiver_id' => $userId
+                )
+            ),
+            'order' => array('Conversation.created_at DESC'),
+            'contain' => array(
+                'Message' => array(
+                    'order' => array('Message.created_at DESC')
+                )
+            ),
+            'limit' => 10, 
+            'page' => $this->request->query('page')
         );
     
-        $conversations = $this->Paginator->paginate('Conversation');
-        $currentPageCount = count($conversations);
+        $conversations = $this->paginate('Conversation');
 
-        $this->set(compact('conversations','totalConversations','currentPageCount'));
+        if ($this->request->is('ajax')) {
+            $this->layout = 'ajax'; 
+            $this->set('conversations', $conversations);
+            $this->render('/Elements/conversations'); 
+        } else {
+          
+            $this->set(compact('conversations','userId'));
+        }
     }
     
 

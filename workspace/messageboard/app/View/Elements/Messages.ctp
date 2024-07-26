@@ -69,7 +69,6 @@
 
 <script>
 $(document).ready(function() {
-
     function isTextOverflowing(element) {
         return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
     }

@@ -1,3 +1,31 @@
+<style>
+    .message-text{
+        max-height: 100px;
+        width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        transition: max-height 0.3s ease;
+    }
+
+    .message-text.expanded{
+        max-height: none;
+        white-space: normal;
+        overflow: visible;
+    }
+
+    .show-more-msg, .show-less{
+        display: inline-block;
+        margin-top: 10px;
+        color: #007bff;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .show-less {
+        display: none;
+    }
+</style>
 <div class="convo-list" id="conversation-list">
         <?php if (!empty($conversations)): ?>
             <?php foreach ($conversations as $conversation): ?>
@@ -44,39 +72,3 @@
     <?php endif; ?>
 </div>
 
-<script>
-
-    $(document).ready(function() {
-    function isTextOverflowing(element) {
-        return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
-    }
-
-    $('.message-text').each(function() {
-        var $msgText = $(this);
-        var $showMore = $msgText.siblings('.show-more-msg');
-        var $showLess = $showMore.siblings('.show-less');
-        
-        if (isTextOverflowing(this)) {
-            $showMore.show();
-        } else {
-            $showMore.hide();
-        }
-
-        $showMore.on('click', function(e) {
-            e.preventDefault();
-            $msgText.addClass('expanded');
-            $showMore.hide();
-            $showLess.show();
-        });
-
-        $showLess.on('click', function(e) {
-            e.preventDefault();
-            $msgText.removeClass('expanded');
-            $showLess.hide();
-            $showMore.show();
-        });
-    });
-    $(document).ready(function() {
-    });
-    });
-</script>

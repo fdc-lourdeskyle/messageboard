@@ -28,7 +28,6 @@ class ConversationsController extends AppController{
     public function index() {
         $userId = $this->Auth->user('id');
     
-        // Set pagination parameters
         $this->paginate = array(
             'conditions' => array(
                 'OR' => array(
@@ -42,21 +41,18 @@ class ConversationsController extends AppController{
                     'order' => array('Message.created_at DESC')
                 )
             ),
-            'limit' => 10, // Set the limit per page
+            'limit' => 10, 
             'page' => $this->request->query('page')
         );
     
-        // Paginate data
         $conversations = $this->paginate('Conversation');
 
-
-        // Check if the request is an AJAX request
         if ($this->request->is('ajax')) {
-            $this->layout = 'ajax'; // Use the ajax layout
+            $this->layout = 'ajax'; 
             $this->set('conversations', $conversations);
-            $this->render('/Elements/conversations'); // Render the partial view
+            $this->render('/Elements/conversations'); 
         } else {
-            // Normal page load
+          
             $this->set(compact('conversations','userId'));
         }
     }

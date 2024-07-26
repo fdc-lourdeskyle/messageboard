@@ -73,24 +73,20 @@
         <?php else: ?>
             <p>No conversations found.</p>
         <?php endif; ?>
-        <?php if (count($conversations) >= 10): ?>
-        <button id="load-more" data-page="<?php echo $this->request->params['paging']['Conversation']['page'] + 1; ?>">Load More</button>
-        <?php endif; ?>
     </div>
+    <?php if (count($conversations) >= 10): ?>
+        <button id="load-more" data-page="<?php echo $this->request->params['paging']['Conversation']['page'] + 1; ?>">Show More</button>
+        <?php endif; ?>
 </div>
 
 <script>
     $(document).ready(function(){
 
-            $('#load-more').on('click', function(){
-                var button = $(this);
-                var page = button.data('page');
-                // var userId = <?php echo json_encode($userId); ?>;
-                var url = '<?php echo $this->Html->url(array('action' => 'index')); ?>';
+        $('#load-more').on('click', function(){
+            var button = $(this);
+            var page = button.data('page');
 
-            
-                console.log('Request URL:', url);
-                console.log('Page:', page);
+            var url = '<?php echo $this->Html->url(array('action' => 'index')); ?>';
 
                 $.ajax({
                     url: url,
@@ -98,114 +94,126 @@
                     type: 'GET',
                     dataType: 'html',
                     success: function(response) {
-        console.log('Response:', response);
+                    console.log('Response:', response);
 
-        // Create a jQuery object from the response
-        var $response = $('<div>').html(response);
+            
+                    var $response = $('<div>').html(response);
+                    var $conversationList = $response.find('#conversation-list');
+                    var newContent = $conversationList.html();
+                    console.log('New content:', newContent);
 
-        // Attempt to find the conversation list
-        var $conversationList = $response.find('#conversation-list');
+                    if (newContent) {
+                        $('#conversation-list').append(newContent);
 
-        // Log the content found
-        if ($conversationList.length) {
-            console.log('Conversation List Found:', $conversationList.html());
-        } else {
-            console.log('Conversation List Not Found');
-        }
+                        var loadMoreButton = $response.find('#load-more');
+                        if (loadMoreButton.length > 0) {
+                            $('#load-more').replaceWith(loadMoreButton);
+                        } else {
+                            $('#load-more').remove();
+                        }
+                            handleTextOverflow();
+                    } else {
+                            $('#load-more').remove();
+                        }
+                        },
+                            error: function(xhr, status, error) {
+                            console.error('AJAX Error:', status, error);
+                            }
+                        });
 
-        // Extract new content
-        var newContent = $conversationList.html();
-        console.log('New content:', newContent);
+        });
+        
+        $(document).on('click', '.delete-conversation', function(e) {
 
-        // Append new content if available
-        if (newContent) {
-            $('#conversation-list').append(newContent);
+            e.preventDefault();
+            var $this = $(this);
+            var conversationId = $this.data('id');
+            var conversationElement = $('#conversation-' + conversationId);
+            console.log(conversationElement);
 
-            var loadMoreButton = $response.find('#load-more');
-            if (loadMoreButton.length > 0) {
-                $('#load-more').replaceWith(loadMoreButton);
-            } else {
-                $('#load-more').remove();
-            }
-        } else {
-            $('#load-more').remove();
-        }
-    },
-                error: function(xhr, status, error) {
-                    console.error('AJAX Error:', status, error);
+            $.ajax({
+                url:'/conversations/delete/' + conversationId,
+                type: 'POST',
+                dataType: 'json',
+                success: function(response) {
+                    if(response.status === 'success'){
+                        conversationElement.fadeOut(500, function(){
+                            $(this).remove();
+                        });
+                    }else{
+                        alert(response.message);
+                    }
+                },
+                error: function(xhr, status, error){
+                    console.log('Error:', error);
+                    console.log('Status', status);
+                    console.dir(xhr);
+                    alert('Error deleting conversation');
                 }
             });
-
         });
 
-
-    });
-
-        $(document).ready(function(){
-            $('.delete-conversation').click(function(e){
-
-                e.preventDefault();
-                var $this = $(this);
-                var conversationId = $this.data('id');
-                var conversationElement = $('#conversation-' + conversationId);
-                console.log(conversationElement);
-
-                $.ajax({
-                    url:'/conversations/delete/' + conversationId,
-                    type: 'POST',
-                    dataType: 'json',
-                    success: function(response) {
-                        if(response.status === 'success'){
-                            conversationElement.fadeOut(500, function(){
-                                $(this).remove();
-                            });
-                        }else{
-                            alert(response.message);
-                        }
-                    },
-                    error: function(xhr, status, error){
-                        console.log('Error:', error);
-                        console.log('Status', status);
-                        console.dir(xhr);
-                        alert('Error deleting conversation');
-                    }
-                });
-            });
-            
-        });
-
-        $(document).ready(function() {
-
-            function isTextOverflowing(element) {
+        function isTextOverflowing(element) {
                 return element.scrollHeight > element.clientHeight || element.scrollWidth > element.clientWidth;
             }
 
-            $('.message-text').each(function() {
-                var $msgText = $(this);
-                var $showMore = $msgText.siblings('.show-more-msg');
+ 
+            function handleTextOverflow() {
+                $('.message-text').each(function() {
+                    console.log($(this).height(), $(this).prop('scrollHeight'));
+                    var $msgText = $(this);
+                    var $showMore = $msgText.siblings('.show-more-msg');
+                    var $showLess = $showMore.siblings('.show-less');
+                    
+                    if (isTextOverflowing(this)) {
+                        $showMore.show();
+                    } else {
+                        $showMore.hide();
+                    }
+
+        
+                    $showMore.off('click').on('click', function(e) {
+                        e.preventDefault();
+                        $msgText.addClass('expanded');
+                        $showMore.hide();
+                        $showLess.show();
+                    });
+
+        
+                    $showLess.off('click').on('click', function(e) {
+                        e.preventDefault();
+                        $msgText.removeClass('expanded');
+                        $showLess.hide();
+                        $showMore.show();
+                    });
+                });
+            }
+    
+            handleTextOverflow();
+
+            $(document).on('click', '.show-more-msg', function(e) {
+
+                e.preventDefault();
+                var $msgText = $(this).siblings('.message-text');
+                var $showMore = $(this);
                 var $showLess = $showMore.siblings('.show-less');
                 
-                if (isTextOverflowing(this)) {
-                    $showMore.show();
-                } else {
-                    $showMore.hide();
-                }
-
-                $showMore.on('click', function(e) {
-                    e.preventDefault();
-                    $msgText.addClass('expanded');
-                    $showMore.hide();
-                    $showLess.show();
-                });
-
-                $showLess.on('click', function(e) {
-                    e.preventDefault();
-                    $msgText.removeClass('expanded');
-                    $showLess.hide();
-                    $showMore.show();
-                });
+                $msgText.addClass('expanded');
+                $showMore.hide();
+                $showLess.show();
             });
-        });
+
+            $(document).on('click', '.show-less', function(e) {
+                e.preventDefault();
+                var $msgText = $(this).siblings('.message-text');
+                var $showLess = $(this);
+                var $showMore = $showLess.siblings('.show-more-msg');
+                
+                $msgText.removeClass('expanded');
+                $showLess.hide();
+                $showMore.show();
+            });
+    });
 
 
 </script>

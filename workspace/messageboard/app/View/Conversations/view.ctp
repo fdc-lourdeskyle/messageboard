@@ -99,11 +99,12 @@ $(document).ready(function() {
                 data: $(this).serialize(),
                 dataType: 'json',
                 success: function(response){
-                    if (response.response) {
+                if (response.response) {
                     response = response.response;
-                    }
+                }
                     if (response.status === 'success') {
                         alert(response.message);
+                        window.location.href = window.location.href;
                         // window.location.href = '/conversations/index';
                     } else {
                         alert(response.message);

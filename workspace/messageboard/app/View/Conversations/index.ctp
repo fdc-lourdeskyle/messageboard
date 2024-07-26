@@ -33,7 +33,7 @@
             <?php echo $this->Html->link('New Message', array('controller' => 'conversations', 'action' => 'add'), array('class' => 'new-message-button')); ?>
         </div>
     </div>
-    <div class="convo-list" id="conversations">
+    <div class="convo-list" id="conversation-list">
         <?php if (!empty($conversations)): ?>
             <?php foreach ($conversations as $conversation): ?>
                 <div class="convo" id="conversation-<?php echo $conversation['Conversation']['id']; ?>">
@@ -73,39 +73,72 @@
         <?php else: ?>
             <p>No conversations found.</p>
         <?php endif; ?>
+        <?php if (count($conversations) >= 10): ?>
+        <button id="load-more" data-page="<?php echo $this->request->params['paging']['Conversation']['page'] + 1; ?>">Load More</button>
+        <?php endif; ?>
     </div>
-    <?php if (count($conversations) >= 10): ?>
-     <button id="load-more" data-page="<?php echo $this->request->params['paging']['Conversation']['page'] + 1; ?>">Load More</button>
-    <?php endif; ?>
 </div>
 
 <script>
-    $(document).on('click', '#load-more', function() {
-        var button = $(this);
-        var page = button.data('page');
-        var url = '<?php echo $this->Html->url(array('action' => 'index')); ?>';
+    $(document).ready(function(){
 
-        $.ajax({
-            url: url,
-            data: { page: page },
-            type: 'GET',
-            dataType: 'html',
-            success: function(response) {
-                var newContent = $(response).find('.conversation');
-                var loadMoreButton = $(response).find('#load-more');
+            $('#load-more').on('click', function(){
+                var button = $(this);
+                var page = button.data('page');
+                // var userId = <?php echo json_encode($userId); ?>;
+                var url = '<?php echo $this->Html->url(array('action' => 'index')); ?>';
 
-                if (newContent.length > 0) {
-                    $('.conversation-list').append(newContent);
-                    if (loadMoreButton.length > 0) {
-                        $('#load-more').replaceWith(loadMoreButton);
-                    } else {
-                        $('#load-more').remove();
-                    }
-                } else {
-                    $('#load-more').remove();
-                }
+            
+                console.log('Request URL:', url);
+                console.log('Page:', page);
+
+                $.ajax({
+                    url: url,
+                    data: { page: page },
+                    type: 'GET',
+                    dataType: 'html',
+                    success: function(response) {
+        console.log('Response:', response);
+
+        // Create a jQuery object from the response
+        var $response = $('<div>').html(response);
+
+        // Attempt to find the conversation list
+        var $conversationList = $response.find('#conversation-list');
+
+        // Log the content found
+        if ($conversationList.length) {
+            console.log('Conversation List Found:', $conversationList.html());
+        } else {
+            console.log('Conversation List Not Found');
+        }
+
+        // Extract new content
+        var newContent = $conversationList.html();
+        console.log('New content:', newContent);
+
+        // Append new content if available
+        if (newContent) {
+            $('#conversation-list').append(newContent);
+
+            var loadMoreButton = $response.find('#load-more');
+            if (loadMoreButton.length > 0) {
+                $('#load-more').replaceWith(loadMoreButton);
+            } else {
+                $('#load-more').remove();
             }
+        } else {
+            $('#load-more').remove();
+        }
+    },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error);
+                }
+            });
+
         });
+
+
     });
 
         $(document).ready(function(){

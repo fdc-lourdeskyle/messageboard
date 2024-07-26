@@ -42,12 +42,14 @@ class ConversationsController extends AppController{
                     'order' => array('Message.created_at DESC')
                 )
             ),
-            'limit' => 10 // Set the limit per page
+            'limit' => 10, // Set the limit per page
+            'page' => $this->request->query('page')
         );
     
         // Paginate data
         $conversations = $this->paginate('Conversation');
-    
+
+
         // Check if the request is an AJAX request
         if ($this->request->is('ajax')) {
             $this->layout = 'ajax'; // Use the ajax layout
@@ -55,7 +57,7 @@ class ConversationsController extends AppController{
             $this->render('/Elements/conversations'); // Render the partial view
         } else {
             // Normal page load
-            $this->set(compact('conversations'));
+            $this->set(compact('conversations','userId'));
         }
     }
     
